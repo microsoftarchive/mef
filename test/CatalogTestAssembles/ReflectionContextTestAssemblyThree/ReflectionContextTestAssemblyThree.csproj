@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProductVersion>10.0.20729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C7D20C0C-A262-4B48-9E01-D3F9FEC6D464}</ProjectGuid>
+    <ProjectTypeGuids></ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AssemblyName>System.ComponentModel.Composition.UnitTests.ReflectionContextTestAssemblyThree</AssemblyName>
+    <RootNamespace>>System.ComponentModel.Composition.UnitTests</RootNamespace>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+</PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\build\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CLR40;USE_CODEPLEX_KEY;FEATURE_LEGACYSURFACEAREA;FEATURE_SERIALIZATION;FEATURE_FILEIO;FEATURE_LEGACYCOMPONENTMODEL;FEATURE_CAS_APTCA;FEATURE_SLIMLOCK;FEATURE_MISSINGCONTRACTARGUMENTVALIDATOR;FEATURE_MISSINGREADONLYDICTIONARY;FEATURE_REFLECTIONCONTEXT;FEATURE_CUSTOMREFLECTIONCONTEXT;FEATURE_INTERNAL_REFLECTIONCONTEXT;FEATURE_REFLECTIONONLY;FEATURE_REFLECTIONEMIT;FEATURE_REFLECTIONFILEIO;FEATURE_ADVANCEDREFLECTION;FEATURE_TRACING;FEATURE_OBSERVABLECOLLECTIONS;FEATURE_ADVANCEDCOLLECTIONS;FEATURE_COMINTEROP;FEATURE_APPDOMAINCONTROL;MEF_FEATURE_MVC;MEF_FEATURE_REGISTRATION;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0414;1570;1572;1573;1591;1699;3021</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\build\ret\</OutputPath>
+    <DefineConstants>TRACE;CLR40;USE_CODEPLEX_KEY;FEATURE_LEGACYSURFACEAREA;FEATURE_SERIALIZATION;FEATURE_FILEIO;FEATURE_LEGACYCOMPONENTMODEL;FEATURE_CAS_APTCA;FEATURE_SLIMLOCK;FEATURE_MISSINGCONTRACTARGUMENTVALIDATOR;FEATURE_MISSINGREADONLYDICTIONARY;FEATURE_REFLECTIONCONTEXT;FEATURE_CUSTOMREFLECTIONCONTEXT;FEATURE_INTERNAL_REFLECTIONCONTEXT;FEATURE_REFLECTIONONLY;FEATURE_REFLECTIONEMIT;FEATURE_REFLECTIONFILEIO;FEATURE_ADVANCEDREFLECTION;FEATURE_TRACING;FEATURE_OBSERVABLECOLLECTIONS;FEATURE_ADVANCEDCOLLECTIONS;FEATURE_COMINTEROP;FEATURE_APPDOMAINCONTROL;MEF_FEATURE_MVC;MEF_FEATURE_REGISTRATION;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0414;1570;1572;1573;1591;1699;3021</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>CodePlexKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+    <ItemGroup>
+    <Compile Include="CatalogDiscovery.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+
+    <ItemGroup>
+    <Compile Include="VersionInfo.cs" />
+    <None Include="CodePlexKey.snk" />
+  </ItemGroup>
+
+    <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="mscorlib" />
+  </ItemGroup>
+
+    <ItemGroup>
+    <ProjectReference Include="..\..\..\src\ComponentModel\ComponentModel.csproj">
+      <Project>{1BBA5101-D4F0-48B8-A5D6-7B23A099DCE3}</Project>
+      <Name>ComponentModel (src\ComponentModel\ComponentModel)</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\src\InternalReflectionContext\System.Reflection.Context.csproj">
+      <Project>{0900B66B-65A1-4653-B3FD-C9A7E76297F1}</Project>
+      <Name>System.Reflection.Context.CodePlex</Name>
+    </ProjectReference>
+  </ItemGroup>
+
+    <ItemGroup>
+  </ItemGroup>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

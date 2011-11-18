@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProductVersion>10.0.20729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{30B91A86-3A5B-49B5-94FC-61372A781904}</ProjectGuid>
+    <ProjectTypeGuids></ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AssemblyName>System.ComponentModel.Composition.Registration.CodePlex</AssemblyName>
+    <RootNamespace>System.ComponentModel.Composition.Registration</RootNamespace>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CLR40;USE_CODEPLEX_KEY;FEATURE_LEGACYSURFACEAREA;FEATURE_SERIALIZATION;FEATURE_FILEIO;FEATURE_LEGACYCOMPONENTMODEL;FEATURE_CAS_APTCA;FEATURE_SLIMLOCK;FEATURE_MISSINGCONTRACTARGUMENTVALIDATOR;FEATURE_MISSINGREADONLYDICTIONARY;FEATURE_REFLECTIONCONTEXT;FEATURE_CUSTOMREFLECTIONCONTEXT;FEATURE_INTERNAL_REFLECTIONCONTEXT;FEATURE_REFLECTIONONLY;FEATURE_REFLECTIONEMIT;FEATURE_REFLECTIONFILEIO;FEATURE_ADVANCEDREFLECTION;FEATURE_TRACING;FEATURE_OBSERVABLECOLLECTIONS;FEATURE_ADVANCEDCOLLECTIONS;FEATURE_COMINTEROP;FEATURE_APPDOMAINCONTROL;MEF_FEATURE_MVC;MEF_FEATURE_REGISTRATION;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0414;1570;1572;1573;1591;1699;3021</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\build\ret\</OutputPath>
+    <DefineConstants>TRACE;CLR40;USE_CODEPLEX_KEY;FEATURE_LEGACYSURFACEAREA;FEATURE_SERIALIZATION;FEATURE_FILEIO;FEATURE_LEGACYCOMPONENTMODEL;FEATURE_CAS_APTCA;FEATURE_SLIMLOCK;FEATURE_MISSINGCONTRACTARGUMENTVALIDATOR;FEATURE_MISSINGREADONLYDICTIONARY;FEATURE_REFLECTIONCONTEXT;FEATURE_CUSTOMREFLECTIONCONTEXT;FEATURE_INTERNAL_REFLECTIONCONTEXT;FEATURE_REFLECTIONONLY;FEATURE_REFLECTIONEMIT;FEATURE_REFLECTIONFILEIO;FEATURE_ADVANCEDREFLECTION;FEATURE_TRACING;FEATURE_OBSERVABLECOLLECTIONS;FEATURE_ADVANCEDCOLLECTIONS;FEATURE_COMINTEROP;FEATURE_APPDOMAINCONTROL;MEF_FEATURE_MVC;MEF_FEATURE_REGISTRATION;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0414;1570;1572;1573;1591;1699;3021</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>CodePlexKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Microsoft\Internal\AttributeServices.cs" />
+    <Compile Include="PlatformWorkarounds.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Microsoft\Internal\Assumes.cs" />
+    <Compile Include="Microsoft\Internal\Assumes.InternalErrorException.cs" />
+    <Compile Include="Strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.resx</DependentUpon>
+      <CustomToolNamespace>Microsoft.Internal</CustomToolNamespace>
+    </Compile>
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\CompositionTrace.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\CompositionTraceId.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\CompositionTraceSource.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\SilverlightTraceWriter.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\TraceSourceTraceWriter.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\TraceWriter.cs" />
+    <Compile Include="System\ComponentModel\Composition\ExceptionBuilder.cs" />
+    <Compile Include="Microsoft\Internal\Requires.cs" />
+    <Compile Include="Microsoft\Internal\Lock.cs" />
+    <Compile Include="Microsoft\Internal\Lock.Reader.cs" />
+    <Compile Include="Microsoft\Internal\Lock.Writer.cs" />
+    <Compile Include="System\ComponentModel\Composition\Registration\BuilderHelpers.cs" />
+    <Compile Include="System\ComponentModel\Composition\Registration\ExportBuilder.cs" />
+    <Compile Include="System\ComponentModel\Composition\Registration\ImportBuilder.cs" />
+    <Compile Include="System\ComponentModel\Composition\Registration\ParameterImportBuilder.cs" />
+    <Compile Include="System\ComponentModel\Composition\Registration\PartBuilder.cs" />
+    <Compile Include="System\ComponentModel\Composition\Registration\PartBuilderOfT.cs" />
+    <Compile Include="System\ComponentModel\Composition\Registration\RegistrationBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="VersionInfo.cs" />
+    <None Include="CodePlexKey.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="mscorlib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ComponentModel\ComponentModel.csproj">
+      <Project>{1BBA5101-D4F0-48B8-A5D6-7B23A099DCE3}</Project>
+      <Name>ComponentModel (src\ComponentModel\ComponentModel)</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InternalReflectionContext\System.Reflection.Context.csproj">
+      <Project>{0900B66B-65A1-4653-B3FD-C9A7E76297F1}</Project>
+      <Name>System.Reflection.Context.CodePlex</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>Microsoft.Internal</CustomToolNamespace>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

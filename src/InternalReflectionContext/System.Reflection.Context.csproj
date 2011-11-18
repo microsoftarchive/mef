@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProductVersion>10.0.20729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0900B66B-65A1-4653-B3FD-C9A7E76297F1}</ProjectGuid>
+    <ProjectTypeGuids></ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AssemblyName>System.Reflection.Context.CodePlex</AssemblyName>
+    <RootNamespace>System.Reflection.Context</RootNamespace>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+</PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\build\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CLR40;USE_CODEPLEX_KEY;FEATURE_LEGACYSURFACEAREA;FEATURE_SERIALIZATION;FEATURE_FILEIO;FEATURE_LEGACYCOMPONENTMODEL;FEATURE_CAS_APTCA;FEATURE_SLIMLOCK;FEATURE_MISSINGCONTRACTARGUMENTVALIDATOR;FEATURE_MISSINGREADONLYDICTIONARY;FEATURE_REFLECTIONCONTEXT;FEATURE_CUSTOMREFLECTIONCONTEXT;FEATURE_INTERNAL_REFLECTIONCONTEXT;FEATURE_REFLECTIONONLY;FEATURE_REFLECTIONEMIT;FEATURE_REFLECTIONFILEIO;FEATURE_ADVANCEDREFLECTION;FEATURE_TRACING;FEATURE_OBSERVABLECOLLECTIONS;FEATURE_ADVANCEDCOLLECTIONS;FEATURE_COMINTEROP;FEATURE_APPDOMAINCONTROL;MEF_FEATURE_MVC;MEF_FEATURE_REGISTRATION;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0414;1570;1572;1573;1591;1699;3021</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\build\ret\</OutputPath>
+    <DefineConstants>TRACE;CLR40;USE_CODEPLEX_KEY;FEATURE_LEGACYSURFACEAREA;FEATURE_SERIALIZATION;FEATURE_FILEIO;FEATURE_LEGACYCOMPONENTMODEL;FEATURE_CAS_APTCA;FEATURE_SLIMLOCK;FEATURE_MISSINGCONTRACTARGUMENTVALIDATOR;FEATURE_MISSINGREADONLYDICTIONARY;FEATURE_REFLECTIONCONTEXT;FEATURE_CUSTOMREFLECTIONCONTEXT;FEATURE_INTERNAL_REFLECTIONCONTEXT;FEATURE_REFLECTIONONLY;FEATURE_REFLECTIONEMIT;FEATURE_REFLECTIONFILEIO;FEATURE_ADVANCEDREFLECTION;FEATURE_TRACING;FEATURE_OBSERVABLECOLLECTIONS;FEATURE_ADVANCEDCOLLECTIONS;FEATURE_COMINTEROP;FEATURE_APPDOMAINCONTROL;MEF_FEATURE_MVC;MEF_FEATURE_REGISTRATION;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0414;1570;1572;1573;1591;1699;3021</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>CodePlexKey.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+    <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Strings.cs" />
+    <Compile Include="System\Reflection\Context\CollectionServices.cs" />
+    <Compile Include="System\Reflection\Context\CustomReflectionContext.cs" />
+    <Compile Include="System\Reflection\Context\CustomReflectionContext.Projector.cs" />
+    <Compile Include="System\Reflection\Context\Custom\AttributeUtils.cs" />
+    <Compile Include="System\Reflection\Context\Custom\CustomAssembly.cs" />
+    <Compile Include="System\Reflection\Context\Custom\CustomConstructorInfo.cs" />
+    <Compile Include="System\Reflection\Context\Custom\CustomEventInfo.cs" />
+    <Compile Include="System\Reflection\Context\Custom\CustomFieldInfo.cs" />
+    <Compile Include="System\Reflection\Context\Custom\CustomMethodInfo.cs" />
+    <Compile Include="System\Reflection\Context\Custom\CustomModule.cs" />
+    <Compile Include="System\Reflection\Context\Custom\CustomParameterInfo.cs" />
+    <Compile Include="System\Reflection\Context\Custom\CustomPropertyInfo.cs" />
+    <Compile Include="System\Reflection\Context\Custom\CustomType.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingAssembly.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingConstructorInfo.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingCustomAttributeData.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingEventInfo.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingExceptionHandlingClause.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingFieldInfo.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingLocalVariableInfo.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingManifestResourceInfo.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingMethodBody.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingMethodInfo.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingModule.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingParameterInfo.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingPropertyInfo.cs" />
+    <Compile Include="System\Reflection\Context\Delegation\DelegatingType.cs" />
+    <Compile Include="System\Reflection\Context\Projection\IProjectable.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingAssembly.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingConstructorInfo.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingCustomAttributeData.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingEventInfo.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingExceptionHandlingClause.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingFieldInfo.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingLocalVariableInfo.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingManifestResourceInfo.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingMethodBody.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingMethodInfo.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingModule.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingParameterInfo.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingPropertyInfo.cs" />
+    <Compile Include="System\Reflection\Context\Projection\ProjectingType.cs" />
+    <Compile Include="System\Reflection\Context\Projection\Projector.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\InheritedMethodInfo.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\InheritedPropertyInfo.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\VirtualMethodBase.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\VirtualParameter.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\VirtualProperty.PropertyGetter.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\VirtualProperty.PropertySetter.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\VirtualPropertyBase.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\VirtualPropertyBase.FuncPropertyAccessorBase.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\VirtualPropertyBase.PropertyGetterBase.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\VirtualPropertyBase.PropertySetterBase.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\VirtualPropertyInfo.cs" />
+    <Compile Include="System\Reflection\Context\Virtual\VirtualReturnParameter.cs" />
+    <Compile Include="System\Reflection\ReflectionContext.cs" />
+    <Compile Include="System\Reflection\IntrospectionExtensions.cs" />
+  </ItemGroup>
+
+    <ItemGroup>
+    <Compile Include="VersionInfo.cs" />
+    <None Include="CodePlexKey.snk" />
+  </ItemGroup>
+
+    <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="mscorlib" />
+  </ItemGroup>
+
+    <ItemGroup>
+  </ItemGroup>
+
+    <ItemGroup>
+    <EmbeddedResource Include="Strings.resx" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
