@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>10.0.20729</ProductVersion>
@@ -9,12 +9,12 @@
     <AssemblyName>System.ComponentModel.Composition.Registration.CodePlex</AssemblyName>
     <RootNamespace>System.ComponentModel.Composition.Registration</RootNamespace>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-  </PropertyGroup>
+</PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\</OutputPath>
+    <OutputPath>..\..\build\chk\</OutputPath>
     <DefineConstants>TRACE;DEBUG;CLR40;USE_CODEPLEX_KEY;FEATURE_LEGACYSURFACEAREA;FEATURE_SERIALIZATION;FEATURE_FILEIO;FEATURE_LEGACYCOMPONENTMODEL;FEATURE_CAS_APTCA;FEATURE_SLIMLOCK;FEATURE_MISSINGCONTRACTARGUMENTVALIDATOR;FEATURE_MISSINGREADONLYDICTIONARY;FEATURE_REFLECTIONCONTEXT;FEATURE_CUSTOMREFLECTIONCONTEXT;FEATURE_INTERNAL_REFLECTIONCONTEXT;FEATURE_REFLECTIONONLY;FEATURE_REFLECTIONEMIT;FEATURE_REFLECTIONFILEIO;FEATURE_ADVANCEDREFLECTION;FEATURE_TRACING;FEATURE_OBSERVABLECOLLECTIONS;FEATURE_ADVANCEDCOLLECTIONS;FEATURE_COMINTEROP;FEATURE_APPDOMAINCONTROL;MEF_FEATURE_MVC;MEF_FEATURE_REGISTRATION;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,8 +33,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>CodePlexKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Microsoft\Internal\AttributeServices.cs" />
+
+    <ItemGroup>
     <Compile Include="PlatformWorkarounds.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Microsoft\Internal\Assumes.cs" />
@@ -45,36 +45,39 @@
       <DependentUpon>Strings.resx</DependentUpon>
       <CustomToolNamespace>Microsoft.Internal</CustomToolNamespace>
     </Compile>
-    <Compile Include="System\ComponentModel\Composition\Diagnostics\CompositionTrace.cs" />
-    <Compile Include="System\ComponentModel\Composition\Diagnostics\CompositionTraceId.cs" />
-    <Compile Include="System\ComponentModel\Composition\Diagnostics\CompositionTraceSource.cs" />
-    <Compile Include="System\ComponentModel\Composition\Diagnostics\SilverlightTraceWriter.cs" />
-    <Compile Include="System\ComponentModel\Composition\Diagnostics\TraceSourceTraceWriter.cs" />
-    <Compile Include="System\ComponentModel\Composition\Diagnostics\TraceWriter.cs" />
     <Compile Include="System\ComponentModel\Composition\ExceptionBuilder.cs" />
+    <Compile Include="Microsoft\Internal\AttributeServices.cs" />
     <Compile Include="Microsoft\Internal\Requires.cs" />
     <Compile Include="Microsoft\Internal\Lock.cs" />
     <Compile Include="Microsoft\Internal\Lock.Reader.cs" />
     <Compile Include="Microsoft\Internal\Lock.Writer.cs" />
-    <Compile Include="System\ComponentModel\Composition\Registration\BuilderHelpers.cs" />
     <Compile Include="System\ComponentModel\Composition\Registration\ExportBuilder.cs" />
     <Compile Include="System\ComponentModel\Composition\Registration\ImportBuilder.cs" />
     <Compile Include="System\ComponentModel\Composition\Registration\ParameterImportBuilder.cs" />
     <Compile Include="System\ComponentModel\Composition\Registration\PartBuilder.cs" />
     <Compile Include="System\ComponentModel\Composition\Registration\PartBuilderOfT.cs" />
     <Compile Include="System\ComponentModel\Composition\Registration\RegistrationBuilder.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\CompositionTrace.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\CompositionTraceId.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\CompositionTraceSource.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\TraceWriter.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\TraceSourceTraceWriter.cs" />
+    <Compile Include="System\ComponentModel\Composition\Diagnostics\SilverlightTraceWriter.cs" />
   </ItemGroup>
-  <ItemGroup>
+
+    <ItemGroup>
     <Compile Include="VersionInfo.cs" />
     <None Include="CodePlexKey.snk" />
   </ItemGroup>
-  <ItemGroup>
+
+    <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="mscorlib" />
   </ItemGroup>
-  <ItemGroup>
+
+    <ItemGroup>
     <ProjectReference Include="..\ComponentModel\ComponentModel.csproj">
       <Project>{1BBA5101-D4F0-48B8-A5D6-7B23A099DCE3}</Project>
       <Name>ComponentModel (src\ComponentModel\ComponentModel)</Name>
@@ -84,12 +87,14 @@
       <Name>System.Reflection.Context.CodePlex</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
+
+    <ItemGroup>
     <EmbeddedResource Include="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Microsoft.Internal</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
+
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

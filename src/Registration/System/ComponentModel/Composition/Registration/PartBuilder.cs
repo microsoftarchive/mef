@@ -100,12 +100,16 @@ namespace System.ComponentModel.Composition.Registration
             return ExportInterfaces(interfaceFilter, null);
         }
 
+        public PartBuilder ExportInterfaces()
+        {
+            return ExportInterfaces(t => true, null);
+        }
+
         public PartBuilder ExportInterfaces(
             Predicate<Type> interfaceFilter,
             Action<Type, ExportBuilder> exportConfiguration)
         {
             Requires.NotNull(interfaceFilter, "interfaceFilter");
-
             this._interfaceExports.Add(Tuple.Create(interfaceFilter, exportConfiguration));
             return this;
         }
@@ -316,10 +320,17 @@ namespace System.ComponentModel.Composition.Registration
                     {
                         foreach (var iface in type.GetInterfaces())
                         {
+                            var underlyingType = ((Type)iface).UnderlyingSystemType;
+
+                            if(underlyingType == typeof(IDisposable) || underlyingType == typeof(IPartImportsSatisfiedNotification) )
+                            {
+                                continue;
+                            }
+
                             // Run through the export specifications see if any match
                             foreach (var exportSpecification in this._interfaceExports)
                             {
-                                if (exportSpecification.Item1 != null && exportSpecification.Item1(((Type)iface).UnderlyingSystemType))
+                                if (exportSpecification.Item1 != null && exportSpecification.Item1(underlyingType))
                                 {
                                     ExportBuilder exportBuilder = new ExportBuilder();
                                     exportBuilder.AsContractType((Type)iface);

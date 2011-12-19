@@ -81,6 +81,14 @@ namespace System.ComponentModel.Composition.AttributedModel
             }
         }
 
+        public bool IsIdentityComparison
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public bool IsPartDiscoverable()
         {
             // The part should not be marked with the "NonDiscoverable"

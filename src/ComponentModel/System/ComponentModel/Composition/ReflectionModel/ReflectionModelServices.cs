@@ -411,6 +411,14 @@ namespace System.ComponentModel.Composition.ReflectionModel
             }
         }
 
+        public bool IsIdentityComparison
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public IDictionary<string, object> GetMetadata()
         {
             return (this._metadata != null) ? this._metadata.Value : null;

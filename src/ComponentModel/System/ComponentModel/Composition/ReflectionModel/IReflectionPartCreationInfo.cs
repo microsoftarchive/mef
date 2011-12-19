@@ -18,5 +18,6 @@ namespace System.ComponentModel.Composition.ReflectionModel
         IEnumerable<ExportDefinition> GetExports();
         IEnumerable<ImportDefinition> GetImports();
         bool IsDisposalRequired { get; }
+        bool IsIdentityComparison { get; }
     }
 }

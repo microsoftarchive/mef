@@ -28,7 +28,7 @@ namespace System.ComponentModel.Composition.Primitives
         private bool _isDisposed;
         private volatile IQueryable<ComposablePartDefinition> _queryableParts = null;
 
-        private static readonly List<Tuple<ComposablePartDefinition, ExportDefinition>> _EmptyExportsList = new List<Tuple<ComposablePartDefinition, ExportDefinition>>();
+        internal static readonly List<Tuple<ComposablePartDefinition, ExportDefinition>> _EmptyExportsList = new List<Tuple<ComposablePartDefinition, ExportDefinition>>();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ComposablePartCatalog"/> class.
@@ -112,10 +112,12 @@ namespace System.ComponentModel.Composition.Primitives
             {
                 foreach (var part in candidateParts)
                 {
-                    var partExports = part.GetExports(definition);
-                    if (partExports != ComposablePartDefinition._EmptyExports)
+                    Tuple<ComposablePartDefinition, ExportDefinition> singleMatch;
+                    IEnumerable<Tuple<ComposablePartDefinition, ExportDefinition>> multipleMatches;
+
+                    if (part.TryGetExports(definition, out singleMatch, out multipleMatches))
                     {
-                        exports = exports.FastAppendToListAllowNulls(partExports);
+                        exports = exports.FastAppendToListAllowNulls(singleMatch, multipleMatches);
                     }
                 }
             }

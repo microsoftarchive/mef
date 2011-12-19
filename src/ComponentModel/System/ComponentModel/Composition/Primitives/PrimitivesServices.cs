@@ -56,7 +56,9 @@ namespace System.ComponentModel.Composition.Primitives
             import = import.GetProductImportDefinition();
             if (expandGenerics)
             {
-                return part.GetExports(import).Any();
+                Tuple<ComposablePartDefinition, ExportDefinition> singleMatch;
+                IEnumerable<Tuple<ComposablePartDefinition, ExportDefinition>> multipleMatches;
+                return part.TryGetExports(import, out singleMatch, out multipleMatches);
             }
             else
             {

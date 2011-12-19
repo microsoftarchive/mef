@@ -11,7 +11,7 @@ namespace System.ComponentModel.Composition.Web.Mvc
 {
     public class CompositionProvider
     {
-        internal const string ApplicationShared = "CompositionProvider.ApplicationShared";
+        public const string ApplicationShared = "CompositionProvider.ApplicationShared";
 
         static CompositionContainer _applicationScopeContainer;
         static ComposablePartCatalog _perRequestCatalog;

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using Microsoft.Internal.Collections;
 
 namespace System.ComponentModel.Composition.Primitives
 {
@@ -105,22 +106,49 @@ namespace System.ComponentModel.Composition.Primitives
         /// </remarks>
         public abstract ComposablePart CreatePart();
 
-        internal virtual IEnumerable<Tuple<ComposablePartDefinition, ExportDefinition>> GetExports(ImportDefinition definition)
+        internal virtual bool TryGetExports(ImportDefinition definition, out Tuple<ComposablePartDefinition, ExportDefinition> singleMatch, out IEnumerable<Tuple<ComposablePartDefinition, ExportDefinition>> multipleMatches)
         {
-            List<Tuple<ComposablePartDefinition, ExportDefinition>> exports = null;
+            singleMatch = null;
+            multipleMatches = null;
+
+            List<Tuple<ComposablePartDefinition, ExportDefinition>> multipleExports = null;
+            Tuple<ComposablePartDefinition, ExportDefinition> singleExport = null;
+            bool matchesFound = false;
             foreach (var export in this.ExportDefinitions)
             {
                 if (definition.IsConstraintSatisfiedBy(export))
                 {
-                    if (exports == null)
+                    matchesFound = true;
+                    if (singleExport == null)
                     {
-                        exports = new List<Tuple<ComposablePartDefinition, ExportDefinition>>();
+                        singleExport = new Tuple<ComposablePartDefinition, ExportDefinition>(this, export);
                     }
-                    exports.Add(new Tuple<ComposablePartDefinition, ExportDefinition>(this, export));
+                    else
+                    {
+                        if (multipleExports == null)
+                        {
+                            multipleExports = new List<Tuple<ComposablePartDefinition, ExportDefinition>>();
+                            multipleExports.Add(singleExport);
+                        }
+                        multipleExports.Add(new Tuple<ComposablePartDefinition, ExportDefinition>(this, export));
+                    }
                 }
             }
 
-            return exports ?? _EmptyExports;
+            if (!matchesFound)
+            {
+                return false;
+            }
+
+            if (multipleExports != null)
+            {
+                multipleMatches = multipleExports;
+            }
+            else
+            {
+                singleMatch = singleExport;
+            }
+            return true;
         }
 
         internal virtual ComposablePartDefinition GetGenericPartDefinition()

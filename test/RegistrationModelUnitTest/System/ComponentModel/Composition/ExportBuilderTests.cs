@@ -1,4 +1,4 @@
-﻿namespace System.ComponentModel.Composition
+namespace System.ComponentModel.Composition
 {
     using System.Collections.Generic;
     using System.ComponentModel.Composition.Registration;
@@ -67,47 +67,6 @@
             Assert.AreEqual(1, list.Count);
             var att = list[0] as InheritedExportAttribute;
             Assert.IsNotNull(att);
-        }
-
-        [TestMethod]
-        public void Named_AddsTwoExportAttributes()
-        {
-            var builder = new ExportBuilder();
-            builder.AsContractType(typeof(IFoo));
-            builder.Named("wiring_1");
-
-            var list = new List<Attribute>();
-            builder.BuildAttributes(typeof(FooImpl), ref list);
-            Assert.AreEqual(2, list.Count);
-            var att = list[0] as ExportAttribute;
-            var wiringatt = list[1] as ExportAttribute;
-
-            Assert.IsNotNull(att);
-            Assert.IsNotNull(wiringatt);
-
-            Assert.AreEqual(typeof(IFoo), att.ContractType);
-            Assert.AreEqual("System.ComponentModel.Composition.ExportBuilderTests+IFoo.ExplicitWiring++wiring_1", wiringatt.ContractName);
-        }
-
-        [TestMethod]
-        public void Inherited_And_Named_AddsTwoInheritedExportAttributes()
-        {
-            var builder = new ExportBuilder();
-            builder.AsContractType(typeof(IFoo));
-            builder.Inherited();
-            builder.Named("wiring1");
-
-            var list = new List<Attribute>();
-            builder.BuildAttributes(typeof(FooImpl), ref list);
-            Assert.AreEqual(2, list.Count);
-            var att = list[0] as InheritedExportAttribute;
-            var wiringatt = list[1] as InheritedExportAttribute;
-
-            Assert.IsNotNull(att);
-            Assert.IsNotNull(wiringatt);
-
-            Assert.AreEqual(typeof(IFoo), att.ContractType);
-            Assert.AreEqual("System.ComponentModel.Composition.ExportBuilderTests+IFoo.ExplicitWiring++wiring1", wiringatt.ContractName);
         }
 
         [TestMethod]

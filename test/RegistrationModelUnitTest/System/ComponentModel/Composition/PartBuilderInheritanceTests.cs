@@ -1,4 +1,4 @@
-﻿namespace System.ComponentModel.Composition
+namespace System.ComponentModel.Composition
 {
 	using System.Collections.Generic;
 	using System.ComponentModel.Composition.Registration;

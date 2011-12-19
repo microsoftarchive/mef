@@ -173,6 +173,34 @@ namespace System.ComponentModel.Composition
             }
         }
 
+
+        public ReadOnlyCollection<Exception> RootCauses
+        {
+            get
+            {
+                var errors = new List<Exception>();
+
+                // In here return a collection of all of the exceptions in the Errors collection
+                foreach (var error in this.Errors)
+                {
+                    if (error.Exception != null)
+                    {
+                        var ce = error.Exception as CompositionException;
+                        if (ce != null)
+                        {
+                            if (ce.RootCauses.Count > 0)
+                            {
+                                errors.AddRange(ce.RootCauses);
+                                continue;
+                            }
+                        }
+                        errors.Add(error.Exception);
+                    }
+                }
+                return errors.ToReadOnlyCollection<Exception>();
+            }
+        }
+
         private string BuildDefaultMessage()
         {
             IEnumerable<IEnumerable<CompositionError>> paths = CalculatePaths(this);

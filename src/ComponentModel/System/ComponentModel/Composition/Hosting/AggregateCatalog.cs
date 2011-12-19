@@ -10,6 +10,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
 using Microsoft.Internal;
+using Microsoft.Internal.Collections;
 
 namespace System.ComponentModel.Composition.Hosting
 {
@@ -125,16 +126,34 @@ namespace System.ComponentModel.Composition.Hosting
 
             Requires.NotNull(definition, "definition");
 
-            // delegate the query to each catalog and merge the results.
-            var exports = new List<Tuple<ComposablePartDefinition, ExportDefinition>>();
+            // We optimize for the case where the result is comparible with the requested cardinality, though we do remain correct in all cases.
+            // We do so to avoid any unnecessary allocations
+            IEnumerable<Tuple<ComposablePartDefinition, ExportDefinition>> result = null;
+            List<Tuple<ComposablePartDefinition, ExportDefinition>> aggregateResult = null;
+
             foreach (var catalog in this._catalogs)
             {
-                foreach (var export in catalog.GetExports(definition))
+                var catalogExports = catalog.GetExports(definition);
+                if (catalogExports != ComposablePartCatalog._EmptyExportsList)
                 {
-                    exports.Add(export);
+                    // ideally this is is the case we will always hit
+                    if (result == null)
+                    {
+                        result = catalogExports;
+                    }
+                    else
+                    {
+                        // sadly the result has already been assigned, which means we are in the aggregate case
+                        if (aggregateResult == null)
+                        {
+                            aggregateResult = new List<Tuple<ComposablePartDefinition, ExportDefinition>>(result);
+                            result = aggregateResult;
+                        }
+                        aggregateResult.AddRange(catalogExports);
+                    }
                 }
             }
-            return exports;
+            return result ?? ComposablePartCatalog._EmptyExportsList;
         }
 
         /// <summary>

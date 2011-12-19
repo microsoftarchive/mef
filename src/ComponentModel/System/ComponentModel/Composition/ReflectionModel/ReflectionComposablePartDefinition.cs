@@ -122,6 +122,7 @@ namespace System.ComponentModel.Composition.ReflectionModel
             }
         }
 
+
         [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope")]
         public override ComposablePart CreatePart()
         {
@@ -146,10 +147,13 @@ namespace System.ComponentModel.Composition.ReflectionModel
             return null;
         }
 
-        internal override IEnumerable<Tuple<ComposablePartDefinition, ExportDefinition>> GetExports(ImportDefinition definition)
+        internal override bool TryGetExports(ImportDefinition definition, out Tuple<ComposablePartDefinition, ExportDefinition> singleMatch, out IEnumerable<Tuple<ComposablePartDefinition, ExportDefinition>> multipleMatches)
         {
             if (this.IsGeneric())
             {
+                singleMatch = null;
+                multipleMatches = null;
+
                 List<Tuple<ComposablePartDefinition, ExportDefinition>> exports = null;
 
                 var genericParameters = (definition.Metadata.Count > 0) ? definition.Metadata.GetValue<IEnumerable<object>>(CompositionConstants.GenericParametersMetadataName) : null;
@@ -166,20 +170,29 @@ namespace System.ComponentModel.Composition.ReflectionModel
                             ComposablePartDefinition candidatePart = null;
                             if (this.TryMakeGenericPartDefinition(candidateParameters, out candidatePart))
                             {
-                                var candidatePartExports = candidatePart.GetExports(definition);
-                                if (candidatePartExports != ComposablePartDefinition._EmptyExports)
+                                Tuple<ComposablePartDefinition, ExportDefinition> candidateSingleMatch;
+                                IEnumerable<Tuple<ComposablePartDefinition, ExportDefinition>> candidateMultipleMatches;
+                                if (candidatePart.TryGetExports(definition, out candidateSingleMatch, out candidateMultipleMatches))
                                 {
-                                    exports = exports.FastAppendToListAllowNulls(candidatePartExports);
+                                    exports = exports.FastAppendToListAllowNulls(candidateSingleMatch, candidateMultipleMatches);
                                 }
                             }
                         }
                     }
                 }
-                return exports ?? _EmptyExports;
+                if (exports != null)
+                {
+                    multipleMatches = exports;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
-                return base.GetExports(definition);
+                return base.TryGetExports(definition, out singleMatch, out multipleMatches);
             }
         }
 
@@ -245,18 +258,32 @@ namespace System.ComponentModel.Composition.ReflectionModel
 
         public override bool Equals(object obj)
         {
-            ReflectionComposablePartDefinition that = obj as ReflectionComposablePartDefinition;
-            if (that == null)
+            if (this._creationInfo.IsIdentityComparison)
             {
-                return false;
+                return object.ReferenceEquals(this, obj);
             }
+            else
+            {
+                ReflectionComposablePartDefinition that = obj as ReflectionComposablePartDefinition;
+                if (that == null)
+                {
+                    return false;
+                }
 
-            return this._creationInfo.Equals(that._creationInfo);
+                return this._creationInfo.Equals(that._creationInfo);
+            }
         }
 
         public override int GetHashCode()
         {
-            return this._creationInfo.GetHashCode();
+            if (this._creationInfo.IsIdentityComparison)
+            {
+                return base.GetHashCode();
+            }
+            else
+            {
+                return this._creationInfo.GetHashCode();
+            }
         }
     }
 }

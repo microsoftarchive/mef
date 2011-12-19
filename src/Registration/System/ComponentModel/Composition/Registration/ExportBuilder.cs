@@ -12,7 +12,6 @@ namespace System.ComponentModel.Composition.Registration
     {
         private bool _isInherited;
         private string _contractName;
-        private string _wiringName;
         private Type _contractType;
         private List<Tuple<string, object>> _metadataItems;
         private List<Tuple< string, Func<Type, object>>> _metadataItemFuncs;
@@ -61,14 +60,6 @@ namespace System.ComponentModel.Composition.Registration
             this._metadataItemFuncs.Add(Tuple.Create(name, itemFunc));
             return this;
         }
-        
-        
-        public ExportBuilder Named(string wiringName)
-        {
-            Requires.NotNull(wiringName, "wiringName");
-            this._wiringName = wiringName;
-            return this;
-        }
 
         internal void BuildAttributes(Type type, ref List<Attribute> attributes)
         {
@@ -81,23 +72,11 @@ namespace System.ComponentModel.Composition.Registration
             {
                 // Default export
                 attributes.Add(new InheritedExportAttribute(this._contractName, this._contractType));
-                if(this._wiringName != null)
-                {
-                    //Wiring Export
-                    var wiringType = this._contractType != null ? this._contractType : type;
-                    attributes.Add(new InheritedExportAttribute(BuilderHelpers.ConstructWiringName(wiringType, this._wiringName), this._contractType));
-                }
             }
             else
             {
                 // Default export
                 attributes.Add(new ExportAttribute(this._contractName, this._contractType));
-                if(this._wiringName != null)
-                {
-                    //Wiring Export
-                    var wiringType = this._contractType != null ? this._contractType : type;
-                    attributes.Add(new ExportAttribute(BuilderHelpers.ConstructWiringName(wiringType, this._wiringName), this._contractType));
-                }
             }
 
             //Add metadata attributes from direct specification

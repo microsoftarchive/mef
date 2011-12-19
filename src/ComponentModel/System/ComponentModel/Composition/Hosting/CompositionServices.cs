@@ -281,6 +281,7 @@ namespace System.ComponentModel.Composition.Hosting
                 else
                 {
                     Type attrType = attr.GetType();
+                    // Perf optimization, relies on short circuit evaluation, often a property attribute is an ExportAttribute
                     if ((attrType != CompositionServices.ExportAttributeType) && attrType.IsAttributeDefined<MetadataAttributeAttribute>(true))
                     {
                         bool allowsMultiple = false;

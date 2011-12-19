@@ -132,6 +132,34 @@ namespace Microsoft.Internal.Collections
             return source;
             
         }
+
+        
+        private static List<T> FastAppendToListAllowNulls<T>(
+                    this List<T> source, T value)
+        {
+            if (source == null)
+            {
+                source = new List<T>();
+            }
+            source.Add(value);
+
+            return source;
+        }
+
+        public static List<T> FastAppendToListAllowNulls<T>(
+                        this List<T> source, T value,
+                        IEnumerable<T> second)
+        {
+            if (second == null)
+            {
+                source = source.FastAppendToListAllowNulls(value);
+            }
+            else
+            {
+                source = source.FastAppendToListAllowNulls(second);
+            }
+            return source;
+        }
  
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {

@@ -492,6 +492,14 @@ namespace System.ComponentModel.Composition.ReflectionModel
             get { return this._originalPartCreationInfo.IsDisposalRequired; }
         }
 
+        public bool IsIdentityComparison
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public string DisplayName
         {
             get { return this.Translate(this._originalPartCreationInfo.DisplayName); }

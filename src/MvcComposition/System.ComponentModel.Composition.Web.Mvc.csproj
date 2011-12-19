@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <ProductVersion>10.0.20729</ProductVersion>
@@ -9,12 +9,12 @@
     <AssemblyName>System.ComponentModel.Composition.Web.Mvc.CodePlex</AssemblyName>
     <RootNamespace>System.ComponentModel.Composition.Web.Mvc</RootNamespace>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-  </PropertyGroup>
+</PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\</OutputPath>
+    <OutputPath>..\..\build\chk\</OutputPath>
     <DefineConstants>TRACE;DEBUG;CLR40;USE_CODEPLEX_KEY;FEATURE_LEGACYSURFACEAREA;FEATURE_SERIALIZATION;FEATURE_FILEIO;FEATURE_LEGACYCOMPONENTMODEL;FEATURE_CAS_APTCA;FEATURE_SLIMLOCK;FEATURE_MISSINGCONTRACTARGUMENTVALIDATOR;FEATURE_MISSINGREADONLYDICTIONARY;FEATURE_REFLECTIONCONTEXT;FEATURE_CUSTOMREFLECTIONCONTEXT;FEATURE_INTERNAL_REFLECTIONCONTEXT;FEATURE_REFLECTIONONLY;FEATURE_REFLECTIONEMIT;FEATURE_REFLECTIONFILEIO;FEATURE_ADVANCEDREFLECTION;FEATURE_TRACING;FEATURE_OBSERVABLECOLLECTIONS;FEATURE_ADVANCEDCOLLECTIONS;FEATURE_COMINTEROP;FEATURE_APPDOMAINCONTROL;MEF_FEATURE_MVC;MEF_FEATURE_REGISTRATION;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,7 +33,8 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>CodePlexKey.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  <ItemGroup>
+
+    <ItemGroup>
     <Compile Include="ApplicationSharedAttribute.cs" />
     <Compile Include="CompositionScopeDependencyResolver.cs" />
     <Compile Include="CompositionProvider.cs" />
@@ -45,24 +46,22 @@
     <Compile Include="RequestCompositionScopeModule.cs" />
     <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
-  <ItemGroup>
+
+    <ItemGroup>
     <Compile Include="VersionInfo.cs" />
     <None Include="CodePlexKey.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ASP.NET Web Pages\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
+
+    <ItemGroup>
     <Reference Include="mscorlib" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\MVC3\System.Web.Mvc.dll</HintPath>
-    </Reference>
+    <Reference Include="MvcLibraries\Microsoft.Web.Infrastructure.dll" />
+    <Reference Include="MvcLibraries\System.Web.Helpers.dll" />
+    <Reference Include="MvcLibraries\System.Web.Mvc.dll" />
+    <Reference Include="MvcLibraries\System.Web.WebPages.dll" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,7 +70,8 @@
     <Reference Include="System.Xml" />
     <Reference Include="mscorlib" />
   </ItemGroup>
-  <ItemGroup>
+
+    <ItemGroup>
     <ProjectReference Include="..\ComponentModel\ComponentModel.csproj">
       <Project>{1BBA5101-D4F0-48B8-A5D6-7B23A099DCE3}</Project>
       <Name>ComponentModel (src\ComponentModel\ComponentModel)</Name>
@@ -85,7 +85,9 @@
       <Name>System.Reflection.Context.CodePlex</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
+
+    <ItemGroup>
   </ItemGroup>
+
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

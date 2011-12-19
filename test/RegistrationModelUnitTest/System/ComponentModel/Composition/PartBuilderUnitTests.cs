@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
@@ -273,22 +273,6 @@ namespace System.ComponentModel.Composition.Registration
             {
                 var item = container.GetExportedValue<AmbiguousConstructors>();
             });
-        }
-
-        [TestMethod]
-        public void Bug152795()
-        {
-            //Registration code
-            var registration = new RegistrationBuilder();
-            registration.ForTypesDerivedFrom<IController>().Export().Export<IController>();
-            registration.ForType<MembershipServiceImpl>().Export<IMembershipService>(builder => builder.Named("my_1"));
-            registration.ForType<AccountController>().SelectConstructor(builder => new AccountController(builder.Import<IMembershipService>(config => config.Named("my_1"))));
-     
-            //When getting the value from the container it will fail with "Cant select constructor.." exception
-            var catalog = new TypeCatalog(Helpers.GetEnumerableOfTypes(typeof(AccountController), typeof(MembershipServiceImpl)), registration);
-            var container = new CompositionContainer(catalog);
-            var controller = container.GetExportedValue<AccountController>();
-            Assert.IsTrue(controller.MembershipService != null);
         }
     }
 }

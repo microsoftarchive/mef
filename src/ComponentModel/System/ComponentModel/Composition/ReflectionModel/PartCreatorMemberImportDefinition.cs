@@ -6,6 +6,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using System.Text;
 using Microsoft.Internal;
 
 namespace System.ComponentModel.Composition.ReflectionModel
@@ -44,6 +45,15 @@ namespace System.ComponentModel.Composition.ReflectionModel
             {
                 return ConstraintServices.CreatePartCreatorConstraint(base.Constraint, this._productImportDefinition);
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            
+            sb.Append(string.Format("\n\tExportFactory of: {0}", this.ProductImportDefinition.ToString()));
+            
+            return sb.ToString();
         }
     }
 }

@@ -18,11 +18,10 @@ namespace System.ComponentModel.Composition.ReflectionModel
     internal class ReflectionComposablePart : ComposablePart, ICompositionElement
     {
         private readonly ReflectionComposablePartDefinition _definition;
-        private readonly Dictionary<ImportDefinition, object> _importValues = new Dictionary<ImportDefinition, object>();
-        private readonly Dictionary<ImportDefinition, ImportingItem> _importsCache = new Dictionary<ImportDefinition, ImportingItem>();
-        private readonly Dictionary<int, ExportingMember> _exportsCache = new Dictionary<int, ExportingMember>();
-        private bool _invokeImportsSatisfied = true;
-        private bool _invokingImportsSatisfied = false;
+        private volatile Dictionary<ImportDefinition, object> _importValues = null;
+        private volatile Dictionary<ImportDefinition, ImportingItem> _importsCache = null;
+        private volatile Dictionary<int, ExportingMember> _exportsCache = null;
+        private volatile bool _invokeImportsSatisfied = true;
         private bool _initialCompositionComplete = false;
         private volatile object _cachedInstance;
         private object _lock = new object();
@@ -63,6 +62,47 @@ namespace System.ComponentModel.Composition.ReflectionModel
         {
         }
 
+        private Dictionary<ImportDefinition, object> ImportValues
+        {
+            get
+            {
+                var value = this._importValues;
+                if(value == null)
+                {
+                    lock(this._lock)
+                    {
+                        value = this._importValues;
+                        if(value == null)
+                        {
+                            value = new Dictionary<ImportDefinition, object>(); 
+                            this._importValues = value;
+                        }
+                    }
+                }
+                return value;
+            }
+        }
+                
+        private Dictionary<ImportDefinition, ImportingItem> ImportsCache
+        {
+            get 
+            {
+                var value = this._importsCache;
+                if(value == null)
+                {
+                    lock(this._lock)
+                    {
+                        if(value == null)
+                        {
+                            value = new Dictionary<ImportDefinition, ImportingItem>(); 
+                            this._importsCache = value;
+                        }
+                    }
+                }
+                return value;
+            }
+        }
+        
         protected object CachedInstance
         {
             get
@@ -177,10 +217,11 @@ namespace System.ComponentModel.Composition.ReflectionModel
 
             // Whenever we are composed/recomposed notify the instance
             this.NotifyImportSatisfied();
-
             lock (this._lock)
             {
                 this._initialCompositionComplete = true;
+                this._importValues = null;
+                this._importsCache = null;
             }
         }
 
@@ -208,15 +249,17 @@ namespace System.ComponentModel.Composition.ReflectionModel
             lock (this._lock)
             {
                 this._invokeImportsSatisfied = true;
-                this._importValues[item.Definition] = value;
+                this.ImportValues[item.Definition] = value;
             }
         }
 
         private object GetInstanceActivatingIfNeeded()
         {
-            if (this._cachedInstance != null)
+            var cachedInstance = this._cachedInstance;
+            
+            if (cachedInstance != null)
             {
-                return this._cachedInstance;
+                return cachedInstance;
             }
             else
             {
@@ -249,12 +292,15 @@ namespace System.ComponentModel.Composition.ReflectionModel
                 SetPrerequisiteImports();
 
                 // set the created instance
-                lock (this._lock)
+                if (this._cachedInstance == null)
                 {
-                    if (this._cachedInstance == null)
+                    lock (this._lock)
                     {
-                        this._cachedInstance = createdInstance;
-                        createdInstance = null;
+                        if (this._cachedInstance == null)
+                        {
+                            this._cachedInstance = createdInstance;
+                            createdInstance = null;
+                        }
                     }
                 }
 
@@ -319,7 +365,7 @@ namespace System.ComponentModel.Composition.ReflectionModel
         {
             // If we're already composed then we know that 
             // all pre-req imports have been satisfied
-            if (_initialCompositionComplete)
+            if (this._initialCompositionComplete)
             {
                 return;
             }
@@ -327,7 +373,7 @@ namespace System.ComponentModel.Composition.ReflectionModel
             // Make sure all pre-req imports have been set
             foreach (ImportDefinition definition in ImportDefinitions.Where(definition => definition.IsPrerequisite))
             {
-                if (!this._importValues.ContainsKey(definition))
+                if (this._importValues == null || !this.ImportValues.ContainsKey(definition))
                 {
                     throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture,
                                                             Strings.InvalidOperation_GetExportedValueBeforePrereqImportSet,
@@ -466,9 +512,9 @@ namespace System.ComponentModel.Composition.ReflectionModel
         {
             lock (this._lock)
             {
-                if (this._importValues.TryGetValue(definition, out value))
+                if (this._importValues != null && this.ImportValues.TryGetValue(definition, out value))
                 {
-                    this._importValues.Remove(definition);
+                    this.ImportValues.Remove(definition);
                     return true;
                 }
             }
@@ -480,17 +526,24 @@ namespace System.ComponentModel.Composition.ReflectionModel
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes")]
         private void NotifyImportSatisfied()
         {
-            if (this._invokeImportsSatisfied && !this._invokingImportsSatisfied)
+            if (this._invokeImportsSatisfied)
             {
                 IPartImportsSatisfiedNotification notify = this.GetInstanceActivatingIfNeeded() as IPartImportsSatisfiedNotification;
+
+                lock (this._lock)
+                {
+                    if (!this._invokeImportsSatisfied)
+                    {
+                        //Already notified on another thread
+                        return;
+                    }
+                    this._invokeImportsSatisfied = false;
+                }
+
                 if (notify != null)
                 {
                     try
                     {
-                        // Reentrancy on composition notifications is allowed, so set this first to avoid 
-                        // an infinte loop of notifications.
-                        this._invokingImportsSatisfied = true;
-
                         notify.OnImportsSatisfied();
                     }
                     catch (Exception exception)
@@ -502,12 +555,6 @@ namespace System.ComponentModel.Composition.ReflectionModel
                             Definition.ToElement(),
                             exception);
                     }
-                    finally
-                    {
-                        this._invokingImportsSatisfied = false;
-                    }
-
-                    this._invokeImportsSatisfied = false;
                 }
             }
         }
@@ -523,12 +570,16 @@ namespace System.ComponentModel.Composition.ReflectionModel
             }
 
             int exportIndex = reflectionExport.GetIndex();
-            if (!_exportsCache.TryGetValue(exportIndex, out result))
+            if(this._exportsCache == null)
+            {
+                this._exportsCache = new Dictionary<int, ExportingMember>();
+            }            
+            if (!this._exportsCache.TryGetValue(exportIndex, out result))
             {
                 result = GetExportingMember(definition);
                 if (result != null)
                 {
-                    _exportsCache[exportIndex] = result;
+                    this._exportsCache[exportIndex] = result;
                 }
             }
 
@@ -538,12 +589,12 @@ namespace System.ComponentModel.Composition.ReflectionModel
         private ImportingItem GetImportingItemFromDefinition(ImportDefinition definition)
         {
             ImportingItem result;
-            if (!_importsCache.TryGetValue(definition, out result))
+            if (!this.ImportsCache.TryGetValue(definition, out result))
             {
                 result = GetImportingItem(definition);
                 if (result != null)
                 {
-                    _importsCache[definition] = result;
+                    this.ImportsCache[definition] = result;
                 }
             }
 
@@ -557,7 +608,6 @@ namespace System.ComponentModel.Composition.ReflectionModel
             {
                 return reflectionDefinition.ToImportingItem();
             }
-
             // Don't recognize it
             return null;
         }

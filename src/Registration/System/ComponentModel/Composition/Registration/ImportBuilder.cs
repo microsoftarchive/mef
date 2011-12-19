@@ -12,7 +12,6 @@ namespace System.ComponentModel.Composition.Registration
     {
         private static readonly Type StringType = typeof(string);
         private string _contractName;
-        private string _wiringName;
         private Type _contractType;
         private bool _asMany;
         private bool _asManySpecified = false;
@@ -37,12 +36,6 @@ namespace System.ComponentModel.Composition.Registration
         public ImportBuilder AsContractName(string contractName)
         {
             this._contractName = contractName;
-            return this;
-        }
-
-        public ImportBuilder Named(string wiringName)
-        {
-            this._wiringName = wiringName;
             return this;
         }
 
@@ -81,16 +74,11 @@ namespace System.ComponentModel.Composition.Registration
         {
             Attribute importAttribute;
             
-            var wiringType = this._contractType != null ? this._contractType : type;
-            var contractName = (this._wiringName != null) 
-                ? BuilderHelpers.ConstructWiringName(wiringType, this._wiringName) 
-                : this._contractName;
-            
             // Infer from Type when not explicitly set.
             bool asMany = (!this._asManySpecified) ? type != StringType && typeof(IEnumerable).IsAssignableFrom(type) : this._asMany;
             if(!asMany)
             {
-                importAttribute = new ImportAttribute(contractName, this._contractType) 
+                importAttribute = new ImportAttribute(this._contractName, this._contractType) 
                                     {
                                         AllowDefault = this._allowDefault,
                                         AllowRecomposition = this._allowRecomposition,
@@ -100,7 +88,7 @@ namespace System.ComponentModel.Composition.Registration
             }
             else
             {
-                importAttribute = new ImportManyAttribute(contractName, this._contractType) 
+                importAttribute = new ImportManyAttribute(this._contractName, this._contractType) 
                                     {
                                         AllowRecomposition = this._allowRecomposition,
                                         RequiredCreationPolicy = this._requiredCreationPolicy,

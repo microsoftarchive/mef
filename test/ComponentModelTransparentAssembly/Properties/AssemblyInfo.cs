@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // Copyright (c) Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 using System;
@@ -13,7 +13,7 @@ using System.Security;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MSIT")]
 [assembly: AssemblyProduct("ComponentModelUnitTestTransparentTypes")]
-[assembly: AssemblyCopyright("Copyright © MSIT 2008")]
+[assembly: AssemblyCopyright("Copyright � MSIT 2008")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

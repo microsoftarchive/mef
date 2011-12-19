@@ -67,6 +67,7 @@ namespace Microsoft.Internal
             Contract.EndContractBlock();
         }
 
+        [DebuggerStepThrough]
         [ContractArgumentValidator]
         private static void NotNullElements<T>(IEnumerable<T> values, string parameterName)
             where T : class
@@ -78,6 +79,30 @@ namespace Microsoft.Internal
             Contract.EndContractBlock();
         }
 
+        [DebuggerStepThrough]
+        public static void NullOrNotNullElements<T>(T[] values, string parameterName)
+            where T : class
+        {
+            NotNullElements(values, parameterName);
+        }
+
+        [DebuggerStepThrough]
+        private static void NotNullElements<T>(T[] values, string parameterName)
+            where T : class
+        {
+            if (values != null)
+            {
+                foreach (var value in values)
+                {
+                    if (value == null)
+                    {
+                        throw ExceptionBuilder.CreateContainsNullElement(parameterName);
+                    }
+                }
+            }
+        }
+
+        [DebuggerStepThrough]
         [ContractArgumentValidator]
         private static void NotNullElements<TKey, TValue>(IEnumerable<KeyValuePair<TKey, TValue>> values, string parameterName)
             where TKey : class

@@ -50,30 +50,7 @@ namespace System.ComponentModel.Composition
 
         public ReadOnlyCollection<Exception> RootCauses
         {
-            get
-            {
-                var errors = new List<Exception>();
-
-                // In here return a collection of all of the exceptions in the Errors collection
-                foreach (var error in _exception.Errors)
-                {
-                    if (error.Exception != null)
-                    {
-                        var ce = error.Exception as CompositionException;
-                        if (ce != null)
-                        {
-                            var ceProxy = new CompositionExceptionDebuggerProxy(ce);
-                            if (ceProxy.RootCauses.Count > 0)
-                            {
-                                errors.AddRange(ceProxy.RootCauses);
-                                continue;
-                            }
-                        }
-                        errors.Add(error.Exception);
-                    }
-                }
-                return errors.ToReadOnlyCollection<Exception>();
-            }
+            get { return _exception.RootCauses; }
         }
     }
 }
