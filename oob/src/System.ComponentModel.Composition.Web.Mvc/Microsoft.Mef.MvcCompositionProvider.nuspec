@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Microsoft.Mef.CompositionProvider</id>
+    <id>Microsoft.Mef.MvcCompositionProvider</id>
     <version>1.0.1</version>
     <title>Composition Provider for ASP.NET MVC</title>
     <authors>Microsoft</authors>
