@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Microsoft.Mef.Lightweight</id>
+    <version>1.0.1</version>
+    <title>MEF Lightweight Composition</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://mef.codeplex.com/license</licenseUrl>
+    <iconUrl>http://www.codeplex.com/Download?ProjectName=MEF&amp;DownloadId=42484</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Throughput-optimised composition container for MEF.</description>
+    <copyright>Copyright © 2011 Microsoft</copyright>
+    <tags>MEF Composition IOC Dependency Injection DI</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.ComponentModel.Composition" />
+      <frameworkAssembly assemblyName="System.ComponentModel.Composition.Registration" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="bin\Release\System.ComponentModel.Composition.Lightweight.dll" target="lib\net45" />
+    <file src="bin\Release\System.ComponentModel.Composition.Lightweight.xml" target="lib\net45" />
+  </files>
+</package>

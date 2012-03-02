@@ -1,0 +1,179 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition.Lightweight.Hosting;
+using System.ComponentModel.Composition.Lightweight.Hosting.Core;
+using System.ComponentModel.Composition.Lightweight.UnitTests.Util;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace System.ComponentModel.Composition.Lightweight.UnitTests
+{
+    [TestClass]
+    public class ExportFactoryTests : ContainerTests
+    {
+        static class Boundaries
+        {
+            public const string DataConsistency = "DataConsistency";
+            public const string UserIdentity = "UserIdentity";
+        }
+
+        [Shared, Export]
+        public class SharedUnbounded { }
+
+        [Shared(Boundaries.DataConsistency), Export]
+        public class SharedBoundedByDC { }
+
+        [Export]
+        public class DataConsistencyBoundaryProvider
+        {
+            [Import, SharingBoundary(Boundaries.DataConsistency)]
+            public ExportFactory<IExportProvider> SharingScopeFactory { get; set; }
+        }
+
+        [Export]
+        public class SharedPartConsumer
+        {
+            public SharedBoundedByDC Sc1, Sc2;
+
+            [ImportingConstructor]
+            public SharedPartConsumer(SharedBoundedByDC sc1, SharedBoundedByDC sc2)
+            {
+                Sc1 = sc1;
+                Sc2 = sc2;
+            }
+        }
+
+        public interface IA { }
+
+        [Export(typeof(IA))]
+        public class A : IA, IDisposable
+        {
+            public bool IsDisposed;
+
+            public void Dispose()
+            {
+                IsDisposed = true;
+            }
+        }
+
+        [PartCreationPolicy(CreationPolicy.Shared), Export]
+        public class GloballySharedWithDependency
+        {
+            public IA A;
+
+            [ImportingConstructor]
+            public GloballySharedWithDependency(IA a)
+            {
+                A = a;
+            }
+        }
+
+        [Export]
+        public class UseExportFactory
+        {
+            [Import]
+            public ExportFactory<IA> AFactory { get; set; }
+        }
+
+        [Export]
+        public class DisposesFactoryProduct : IDisposable
+        {
+            ExportFactory<IA> _factory;
+
+            [ImportingConstructor]
+            public DisposesFactoryProduct(ExportFactory<IA> factory)
+            {
+                _factory = factory;
+            }
+
+            public ExportLifetimeContext<IA> Product { get; set; }
+
+            public void CreateProduct()
+            {
+                Product = _factory.CreateExport();
+            }
+
+            public void Dispose()
+            {
+                Product.Dispose();
+            }
+        }
+
+        [TestMethod]
+        public void SharedPartsAreSharedBetweenAllScopes()
+        {
+            var cc = CreateContainer(typeof(SharedUnbounded), typeof(DataConsistencyBoundaryProvider));
+            var bp = cc.GetExport<DataConsistencyBoundaryProvider>().SharingScopeFactory;
+            var x = bp.CreateExport().Value.GetExport<SharedUnbounded>();
+            var y = bp.CreateExport().Value.GetExport<SharedUnbounded>();
+            Assert.AreSame(x, y);
+        }
+
+        [TestMethod]
+        public void TheSameSharedInstanceIsReusedWithinItsSharingBoundary()
+        {
+            var cc = CreateContainer(typeof(SharedBoundedByDC), typeof(SharedPartConsumer), typeof(DataConsistencyBoundaryProvider));
+            var sf = cc.GetExport<DataConsistencyBoundaryProvider>().SharingScopeFactory;
+            var s = sf.CreateExport();
+            var s2 = sf.CreateExport();
+            var x = s.Value.GetExport<SharedPartConsumer>();
+            var y = s2.Value.GetExport<SharedPartConsumer>();
+            Assert.AreSame(x.Sc1, x.Sc2);
+            Assert.AreNotSame(x.Sc1, y.Sc1);
+        }
+
+        [TestMethod]
+        public void NonSharedInstancesCreatedByAnExportFactoryAreControlledByTheirExportLifetimeContext()
+        {
+            var cc = CreateContainer(typeof(A), typeof(UseExportFactory));
+            var bef = cc.GetExport<UseExportFactory>();
+            var a = bef.AFactory.CreateExport();
+            Assert.IsInstanceOfType(a.Value, typeof(A));
+            Assert.IsFalse(((A)a.Value).IsDisposed);
+            a.Dispose();
+            Assert.IsTrue(((A)a.Value).IsDisposed);
+        }
+
+        [TestMethod]
+        public void DependenciesOfSharedPartsAreResolvedInTheGlobalScope()
+        {
+            var cc = new ContainerConfiguration()
+                .WithParts(typeof(GloballySharedWithDependency), typeof(A), typeof(DataConsistencyBoundaryProvider))
+                .CreateContainer();
+            var s = cc.Value.GetExport<DataConsistencyBoundaryProvider>().SharingScopeFactory.CreateExport();
+            var g = s.Value.GetExport<GloballySharedWithDependency>();
+            s.Dispose();
+            var a = (A)g.A;
+            Assert.IsFalse(a.IsDisposed);
+            cc.Dispose();
+            Assert.IsTrue(a.IsDisposed);
+        }
+
+        [TestMethod]
+        public void WhenABoundaryIsPresentBoundedPartsCannotBeCreatedOutsideIt()
+        {
+            var container = CreateContainer(typeof(DataConsistencyBoundaryProvider), typeof(SharedBoundedByDC));
+            var x = AssertX.Throws<LightweightCompositionException>(() => container.GetExport<SharedBoundedByDC>());
+        }
+
+        [TestMethod]
+        public void TheProductOfAnExportFactoryCanBeDisposedDuringDisposalOfTheParent()
+        {
+            var container = new ContainerConfiguration()
+                .WithPart<DisposesFactoryProduct>()
+                .WithPart<A>()
+                .CreateContainer();
+
+            var dfp = container.Value.GetExport<DisposesFactoryProduct>();
+            dfp.CreateProduct();
+
+            var a = dfp.Product.Value as A;
+
+            container.Dispose();
+
+            Assert.IsTrue(a.IsDisposed);
+        }
+    }
+}
