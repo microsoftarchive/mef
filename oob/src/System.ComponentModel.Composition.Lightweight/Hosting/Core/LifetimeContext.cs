@@ -33,8 +33,8 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
     {
         readonly LifetimeContext _root;
         readonly LifetimeContext _parent;
-        readonly SmallSparseInitonlyArray _sharedPartInstances = new SmallSparseInitonlyArray();
-        readonly Dictionary<int, object> _instancesUndergoingInitialization = new Dictionary<int, object>();
+        readonly SmallSparseInitonlyArray _sharedPartInstances = new SmallSparseInitonlyArray(),
+                                          _instancesUndergoingInitialization = new SmallSparseInitonlyArray();
         
         // Protected by locking [this], set to null once disposed
         List<IDisposable> _boundPartInstances = new List<IDisposable>(0);
@@ -178,7 +178,6 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
                 operation.AddPostCompositionAction(() =>
                 {
                     _sharedPartInstances.Add(sharingId, result);
-                    _instancesUndergoingInitialization.Remove(sharingId);
                     Monitor.Exit(_sharedPartInstances);
                 });
             }
