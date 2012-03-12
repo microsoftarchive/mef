@@ -59,6 +59,7 @@
     <Compile Include="ActivationEventOrderingTests.cs" />
     <Compile Include="CardinalityTests.cs" />
     <Compile Include="CircularityTests.cs" />
+    <Compile Include="ConcurrencyTests.cs" />
     <Compile Include="ContainerTests.cs" />
     <Compile Include="ContractTests.cs" />
     <Compile Include="DictionaryImportTests.cs" />

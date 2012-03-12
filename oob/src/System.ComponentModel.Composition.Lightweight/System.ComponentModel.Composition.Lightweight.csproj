@@ -100,7 +100,6 @@
     <Compile Include="Hosting\Providers\ImportMany\ImportManyExportDescriptorProvider.cs" />
     <Compile Include="Hosting\Providers\Lazy\LazyExportDescriptorProvider.cs" />
     <Compile Include="Hosting\Providers\TypedParts\ActivationFeatures\LifetimeFeature.cs" />
-    <Compile Include="Hosting\Providers\TypedParts\ActivationFeatures\GlobalInstanceHolder.cs" />
     <Compile Include="Hosting\Core\CompositeActivator.cs" />
     <Compile Include="Hosting\Core\ExportDescriptor.cs" />
     <Compile Include="Hosting\Core\ExportDescriptorRegistry.cs" />
@@ -108,7 +107,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProgrammingModel\Contract.cs" />
     <Compile Include="Hosting\Providers\TypedParts\ActivationFeatures\PropertyInjectionFeature.cs" />
-    <Compile Include="Hosting\Providers\TypedParts\ActivationFeatures\SharedInstanceOptimizationFeature.cs" />
     <Compile Include="Hosting\Providers\TypedParts\TypedPartExportDescriptorProvider.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -17,8 +17,8 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
     /// <remarks>Instances of this class are not safe for access by multiple threads.</remarks>
     public sealed class CompositionOperation
     {
-        IList<Action> _nonPrerequisiteActions;
-        IList<Action> _postCompositionActions;
+        List<Action> _nonPrerequisiteActions;
+        List<Action> _postCompositionActions;
 
         // Construct using Run() method.
         CompositionOperation() { }

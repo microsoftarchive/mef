@@ -29,7 +29,7 @@ namespace System.ComponentModel.Composition.Lightweight.UnitTests
     public class ActivationEventOrderingTests : ContainerTests
     {
         [TestMethod]
-        public void OnImportsSatisfiedIsCalledIfPresent()
+        public void OnImportsSatisfiedIsCalledAfterPropertyInjection()
         {
             var cc = CreateContainer(typeof(TracksImportSatisfaction), typeof(Imported));
 

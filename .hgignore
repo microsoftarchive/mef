@@ -13,3 +13,5 @@ oob/lib/AspNetMvc3/Microsoft.Web.Infrastructure.dll
 oob/lib/AspNetMvc3/System.Web.Helpers.dll
 oob/lib/AspNetMvc3/System.Web.Mvc.dll
 oob/lib/AspNetMvc3/System.Web.WebPages.dll
+*.psess
+*.vsp

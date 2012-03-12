@@ -14,7 +14,7 @@ namespace CompositionThroughput
     {
         static void Main(string[] args)
         {
-            //SerialRunForPeformanceAnalysis(new LightweightHugeGraph4Benchmark());
+            //SerialRunForPeformanceAnalysis(new LightweightWebBenchmark());
             //return;
 
             Console.WriteLine("Composition Throughput Benchmarks");
@@ -41,7 +41,7 @@ namespace CompositionThroughput
                     new LightweightHugeGraphCBenchmark(),
                     new LightweightHugeGraph4Benchmark()
                 }),
-                new Suite("Huge Graph (Slow)", 3000, new Benchmark[] {
+                new Suite("Huge Graph (Slow)", 300, new Benchmark[] {
                     new MefHugeGraphABenchmark(),
                     new MefHugeGraphBBenchmark(),
                     new MefHugeGraphCBenchmark()

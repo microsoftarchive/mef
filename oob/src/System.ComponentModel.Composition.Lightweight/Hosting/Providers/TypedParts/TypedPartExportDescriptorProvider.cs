@@ -130,7 +130,6 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Providers.TypedP
                 new PropertyInjectionFeature(attributeContext),
                 new PisnFeature(),
                 new LifetimeFeature(),
-                new SharedInstanceOptimizationFeature(),
                 new DynamicMethodOptimisationFeature()
             };
         }

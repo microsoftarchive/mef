@@ -34,6 +34,7 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
         readonly LifetimeContext _root;
         readonly LifetimeContext _parent;
         readonly SmallSparseInitonlyArray _sharedPartInstances = new SmallSparseInitonlyArray();
+        readonly Dictionary<int, object> _instancesUndergoingInitialization = new Dictionary<int, object>();
         
         // Protected by locking [this], set to null once disposed
         List<IDisposable> _boundPartInstances = new List<IDisposable>(0);
@@ -154,15 +155,40 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
             if (_sharedPartInstances.TryGetValue(sharingId, out result))
                 return result;
 
-            lock (_sharedPartInstances)
+            Monitor.Enter(_sharedPartInstances);
+            try
             {
                 if (_sharedPartInstances.TryGetValue(sharingId, out result))
+                {
+                    Monitor.Exit(_sharedPartInstances);
                     return result;
+                }
+
+                // Already being initialized _on the same thread_.
+                if (_instancesUndergoingInitialization.TryGetValue(sharingId, out result))
+                {
+                    Monitor.Exit(_sharedPartInstances);
+                    return result;
+                }
 
                 result = creator(this, operation);
-                _sharedPartInstances.Add(sharingId, result);
-                return result;
+
+                _instancesUndergoingInitialization.Add(sharingId, result);
+
+                operation.AddPostCompositionAction(() =>
+                {
+                    _sharedPartInstances.Add(sharingId, result);
+                    _instancesUndergoingInitialization.Remove(sharingId);
+                    Monitor.Exit(_sharedPartInstances);
+                });
             }
+            catch
+            {
+                Monitor.Exit(_sharedPartInstances);
+                throw;
+            }
+
+            return result;
         }
 
         /// <summary>
