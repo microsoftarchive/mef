@@ -16,6 +16,7 @@
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.ComponentModel.Composition" />
       <frameworkAssembly assemblyName="System.ComponentModel.Composition.Registration" />
+      <frameworkAssembly assemblyName="System.Reflection.Context" />
     </frameworkAssemblies>
     <dependencies>
       <dependency id="Microsoft.Mef.Lightweight" version="1.0.0" />
