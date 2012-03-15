@@ -34,9 +34,7 @@ namespace System.ComponentModel.Composition.Web.Mvc
             if (assemblies == null) throw new ArgumentNullException("assemblies");
             if (reflectionContext == null) throw new ArgumentNullException("reflectionContext");
 
-            if (reflectionContext != null)
-                this.WithDefaultConventions(reflectionContext);
-
+            this.WithDefaultConventions(reflectionContext);
             this.WithAssemblies(assemblies);
         }
 
@@ -80,9 +78,7 @@ namespace System.ComponentModel.Composition.Web.Mvc
 
         private static bool IsAPart(Type t)
         {
-            return !t.IsAssignableFrom(typeof(Attribute)) &&
-                                    t.Namespace != null &&
-                                    t.IsInNamespace("Parts");
+            return !t.IsAssignableFrom(typeof(Attribute)) && t.IsInNamespace("Parts");
         }
     }
 }
