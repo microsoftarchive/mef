@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.Composition;
+using System.Threading;
 
 namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
 {
@@ -15,10 +16,11 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
     /// Represents a single logical graph-building operation.
     /// </summary>
     /// <remarks>Instances of this class are not safe for access by multiple threads.</remarks>
-    public sealed class CompositionOperation
+    public sealed class CompositionOperation : IDisposable
     {
         List<Action> _nonPrerequisiteActions;
         List<Action> _postCompositionActions;
+        Stack<object> _sharingLocks;
 
         // Construct using Run() method.
         CompositionOperation() { }
@@ -36,10 +38,12 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
             if (context == null) throw new ArgumentNullException("context");
             if (activator == null) throw new ArgumentNullException("activator");
 
-            var operation = new CompositionOperation();
-            var result = activator(context, operation);
-            operation.Complete();
-            return result;
+            using (var operation = new CompositionOperation())
+            {
+                var result = activator(context, operation);
+                operation.Complete();
+                return result;
+            }
         }
 
         /// <summary>
@@ -74,6 +78,15 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
             _postCompositionActions.Add(action);
         }
 
+        internal void EnterSharingLock(object sharingLock)
+        {
+            if (_sharingLocks == null)
+                _sharingLocks = new Stack<object>();
+
+            _sharingLocks.Push(sharingLock);
+            Monitor.Enter(sharingLock);
+        }
+
         void Complete()
         {
             while (_nonPrerequisiteActions != null)
@@ -95,6 +108,18 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
 
             foreach (var action in currentActions)
                 action();
+        }
+
+        /// <summary>
+        /// Release locks held during the operation.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_sharingLocks != null)
+            {
+                while (_sharingLocks.Count != 0)
+                    Monitor.Exit(_sharingLocks.Pop());
+            }
         }
     }
 }

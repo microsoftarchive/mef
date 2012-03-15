@@ -33,10 +33,13 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
     {
         readonly LifetimeContext _root;
         readonly LifetimeContext _parent;
-        readonly SmallSparseInitonlyArray _sharedPartInstances = new SmallSparseInitonlyArray(),
-                                          _instancesUndergoingInitialization = new SmallSparseInitonlyArray();
-        
-        // Protected by locking [this], set to null once disposed
+
+        // Protects the two members holding shared instances
+        readonly object _sharingLock = new object();
+        SmallSparseInitonlyArray _sharedPartInstances, _instancesUndergoingInitialization;
+
+        // Protects the member holding bound instances.
+        readonly object _boundPartLock = new object();
         List<IDisposable> _boundPartInstances = new List<IDisposable>(0);
 
         readonly string[] _sharingBoundaries;
@@ -104,7 +107,7 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
         public void Dispose()
         {
             IEnumerable<IDisposable> toDispose = null;
-            lock (this)
+            lock (_boundPartLock)
             {
                 if (_boundPartInstances != null)
                 {
@@ -127,7 +130,7 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
         /// <param name="instance">The disposable part to bind.</param>
         public void AddBoundInstance(IDisposable instance)
         {
-            lock (this)
+            lock (_boundPartLock)
             {
                 if (_boundPartInstances == null)
                     throw new ObjectDisposedException(ToString());
@@ -152,40 +155,34 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
         public object GetOrCreate(int sharingId, CompositionOperation operation, CompositeActivator creator)
         {
             object result;
-            if (_sharedPartInstances.TryGetValue(sharingId, out result))
+            if (_sharedPartInstances != null && _sharedPartInstances.TryGetValue(sharingId, out result))
                 return result;
 
-            Monitor.Enter(_sharedPartInstances);
-            try
+            // Remains locked for the rest of the operation.
+            operation.EnterSharingLock(_sharingLock);
+
+            if (_sharedPartInstances == null)
             {
-                if (_sharedPartInstances.TryGetValue(sharingId, out result))
-                {
-                    Monitor.Exit(_sharedPartInstances);
-                    return result;
-                }
-
-                // Already being initialized _on the same thread_.
-                if (_instancesUndergoingInitialization.TryGetValue(sharingId, out result))
-                {
-                    Monitor.Exit(_sharedPartInstances);
-                    return result;
-                }
-
-                result = creator(this, operation);
-
-                _instancesUndergoingInitialization.Add(sharingId, result);
-
-                operation.AddPostCompositionAction(() =>
-                {
-                    _sharedPartInstances.Add(sharingId, result);
-                    Monitor.Exit(_sharedPartInstances);
-                });
+                _sharedPartInstances = new SmallSparseInitonlyArray();
+                _instancesUndergoingInitialization = new SmallSparseInitonlyArray();
             }
-            catch
+            else if (_sharedPartInstances.TryGetValue(sharingId, out result))
             {
-                Monitor.Exit(_sharedPartInstances);
-                throw;
+                return result;
             }
+
+            // Already being initialized _on the same thread_.
+            if (_instancesUndergoingInitialization.TryGetValue(sharingId, out result))
+                return result;
+
+            result = creator(this, operation);
+
+            _instancesUndergoingInitialization.Add(sharingId, result);
+
+            operation.AddPostCompositionAction(() =>
+            {
+                _sharedPartInstances.Add(sharingId, result);
+            });
 
             return result;
         }
