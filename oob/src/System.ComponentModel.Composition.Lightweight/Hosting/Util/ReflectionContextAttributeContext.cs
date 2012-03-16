@@ -41,10 +41,10 @@ namespace System.ComponentModel.Composition.Lightweight.Util
             }
             else
             {
-                var mappedType = MapType(member.DeclaringType);
+                var mappedDeclaringType = MapType(member.DeclaringType);
                 if (member.MemberType == MemberTypes.Constructor)
                 {
-                    mapped = mappedType.GetConstructor(
+                    mapped = mappedDeclaringType.GetConstructor(
                         instanceBindingFlags,
                         null,
                         ((ConstructorInfo)member).GetParameters().Select(pi => pi.ParameterType).ToArray(),
@@ -52,12 +52,7 @@ namespace System.ComponentModel.Composition.Lightweight.Util
                 }
                 else if (member.MemberType == MemberTypes.Property)
                 {
-                    var inspectedType = mappedType;
-                    while (mapped == null && inspectedType != null)
-                    {
-                        mapped = inspectedType.GetProperty(member.Name, declaredInstanceBindingFlags);
-                        inspectedType = inspectedType.BaseType;
-                    }
+                    mapped = mappedDeclaringType.GetProperty(member.Name, declaredInstanceBindingFlags);
                 }
             }
 
