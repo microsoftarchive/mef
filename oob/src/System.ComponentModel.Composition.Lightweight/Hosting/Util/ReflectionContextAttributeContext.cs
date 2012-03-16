@@ -32,21 +32,33 @@ namespace System.ComponentModel.Composition.Lightweight.Util
         T MapMemberOrDefault<T>(MemberInfo member, Func<MemberInfo, T> mapping)
         {
             const BindingFlags instanceBindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+            const BindingFlags declaredInstanceBindingFlags = instanceBindingFlags | BindingFlags.DeclaredOnly;
 
             MemberInfo mapped = null;
             if (member.MemberType == MemberTypes.TypeInfo || member.MemberType == MemberTypes.NestedType)
+            {
                 mapped = MapType((Type)member);
+            }
             else
             {
                 var mappedType = MapType(member.DeclaringType);
                 if (member.MemberType == MemberTypes.Constructor)
+                {
                     mapped = mappedType.GetConstructor(
                         instanceBindingFlags,
                         null,
                         ((ConstructorInfo)member).GetParameters().Select(pi => pi.ParameterType).ToArray(),
                         null);
+                }
                 else if (member.MemberType == MemberTypes.Property)
-                    mapped = mappedType.GetProperty(member.Name, instanceBindingFlags);
+                {
+                    var inspectedType = mappedType;
+                    while (mapped == null && inspectedType != null)
+                    {
+                        mapped = inspectedType.GetProperty(member.Name, declaredInstanceBindingFlags);
+                        inspectedType = inspectedType.BaseType;
+                    }
+                }
             }
 
             if (mapped == null)
