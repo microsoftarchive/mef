@@ -29,18 +29,18 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
         /// Execute a new composition operation starting within the specified lifetime
         /// context, for the specified activator.
         /// </summary>
-        /// <param name="context">Context in which to begin the operation (the operation can flow
+        /// <param name="outermostLifetimeContext">Context in which to begin the operation (the operation can flow
         /// to the parents of the context if requried).</param>
-        /// <param name="activator">Activator that will drive the operation.</param>
+        /// <param name="compositionRootActivator">Activator that will drive the operation.</param>
         /// <returns>The composed object graph.</returns>
-        public static object Run(LifetimeContext context, CompositeActivator activator)
+        public static object Run(LifetimeContext outermostLifetimeContext, CompositeActivator compositionRootActivator)
         {
-            if (context == null) throw new ArgumentNullException("context");
-            if (activator == null) throw new ArgumentNullException("activator");
+            if (outermostLifetimeContext == null) throw new ArgumentNullException("outermostLifetimeContext");
+            if (compositionRootActivator == null) throw new ArgumentNullException("compositionRootActivator");
 
             using (var operation = new CompositionOperation())
             {
-                var result = activator(context, operation);
+                var result = compositionRootActivator(outermostLifetimeContext, operation);
                 operation.Complete();
                 return result;
             }

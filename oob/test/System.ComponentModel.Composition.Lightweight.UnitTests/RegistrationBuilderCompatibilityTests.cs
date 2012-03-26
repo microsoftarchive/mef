@@ -31,5 +31,26 @@ namespace System.ComponentModel.Composition.Lightweight.UnitTests
                 .WithPart(typeof(Derived), rb)
                 .CreateContainer();
         }
+
+        public interface IRepository<T> { }
+
+        public class EFRepository<T> : IRepository<T> { }
+
+
+        // Seems to be a problem with RegistrationBuilder, investigating.
+        [TestMethod, Ignore]
+        public void RegistrationBuilderExportsOpenGenerics()
+        {
+            var rb = new RegistrationBuilder();
+
+            rb.ForTypesDerivedFrom(typeof(IRepository<>))
+                .Export(eb => eb.AsContractType(typeof(IRepository<>)));
+
+            var c = new ContainerConfiguration()
+                .WithPart(typeof(EFRepository<>), rb)
+                .CreateContainer();
+
+            var r = c.Value.GetExport<IRepository<string>>();
+        }
     }
 }
