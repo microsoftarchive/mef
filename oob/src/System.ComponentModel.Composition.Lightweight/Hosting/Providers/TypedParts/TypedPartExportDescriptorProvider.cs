@@ -127,10 +127,10 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Providers.TypedP
         static ActivationFeature[] CreateActivationFeatures(IAttributeContext attributeContext)
         {
             return new ActivationFeature[] {
+                new DisposalFeature(),
                 new PropertyInjectionFeature(attributeContext),
                 new PisnFeature(),
                 new LifetimeFeature(),
-                new DynamicMethodOptimisationFeature()
             };
         }
 

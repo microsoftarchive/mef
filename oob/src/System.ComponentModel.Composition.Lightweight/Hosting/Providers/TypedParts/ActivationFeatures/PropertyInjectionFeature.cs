@@ -22,7 +22,6 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Providers.TypedP
     {
         readonly IAttributeContext _attributeContext;
         static readonly MethodInfo ActivatorInvokeMethod = typeof(CompositeActivator).GetMethod("Invoke");
-        static readonly MethodInfo AddNonPrerequisiteActionMethod = typeof(CompositionOperation).GetMethod("AddNonPrerequisiteAction");
 
         public PropertyInjectionFeature(IAttributeContext attributeContext)
         {
@@ -65,11 +64,9 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Providers.TypedP
             return result;
         }
 
-        public override Expression RewriteActivator(
-            Type partType, 
-            ParameterExpression compositionContextParameter,
-            ParameterExpression operationParameter,
-            Expression activatorBody, 
+        public override CompositeActivator RewriteActivator(
+            Type partType,
+            CompositeActivator activator,
             IDictionary<string, object> partMetadata,
             Dependency[] dependencies)
         {
@@ -78,38 +75,46 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Providers.TypedP
                 .ToDictionary(d => ((PropertyImportSite)d.Site).Property);
 
             if (propertyDependencies.Count == 0)
-                return activatorBody;
+                return activator;
 
-            var temp = Expression.Variable(partType);
+            var lc = Expression.Parameter(typeof(LifetimeContext));
+            var op = Expression.Parameter(typeof(CompositionOperation));
+            var inst = Expression.Parameter(typeof(object));
+            var typed = Expression.Variable(partType);
 
-            var propertySetters = new List<Expression>();
+            var statements = new List<Expression>();
+            var assignTyped = Expression.Assign(typed, Expression.Convert(inst, partType));
+            statements.Add(assignTyped);
+
             foreach (var d in propertyDependencies)
             {
                 var property = d.Key;
 
                 var assignment = Expression.Assign(
-                    Expression.MakeMemberAccess(temp, property),
+                    Expression.MakeMemberAccess(typed, property),
                     Expression.Convert(
                         Expression.Call(
                             Expression.Constant(d.Value.Target.GetDescriptor().Activator),
                             ActivatorInvokeMethod,
-                            compositionContextParameter,
-                            operationParameter),
+                            lc,
+                            op),
                         property.PropertyType));
 
-                propertySetters.Add(assignment);
+                statements.Add(assignment);
             }
 
-            var queuePropertySetting = Expression.Call(
-                operationParameter,
-                AddNonPrerequisiteActionMethod,
-                Expression.Lambda<Action>(Expression.Block(propertySetters)));
+            statements.Add(inst);
 
-            return Expression.Block(
-                new [] { temp },
-                Expression.Assign(temp, Expression.Convert(activatorBody, partType)),
-                queuePropertySetting,
-                Expression.Convert(temp, typeof(object)));
+            var setAll = Expression.Block(new[] { typed }, statements);
+            var setAction = Expression.Lambda<Func<object, LifetimeContext, CompositionOperation, object>>(
+                setAll, inst, lc, op).Compile();
+
+            return (c, o) =>
+            {
+                var i = activator(c, o);
+                o.AddNonPrerequisiteAction(() => setAction(i, c, o));
+                return i;
+            };
         }
     }
 }

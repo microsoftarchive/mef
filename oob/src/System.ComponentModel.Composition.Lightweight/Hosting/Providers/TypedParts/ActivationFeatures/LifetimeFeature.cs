@@ -21,73 +21,31 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Providers.TypedP
     /// </summary>
     class LifetimeFeature  : ActivationFeature
     {
-        static readonly MethodInfo AddBoundInstanceMethod = typeof(LifetimeContext).GetMethod("AddBoundInstance");
-        static readonly MethodInfo FindContextWithinMethod = typeof(LifetimeContext).GetMethod("FindContextWithin");
-        static readonly MethodInfo GetOrCreate = typeof(LifetimeContext).GetMethod("GetOrCreate");
-
-        public override Expression RewriteActivator(
+        public override CompositeActivator RewriteActivator(
             Type partType,
-            ParameterExpression compositionContextParameter,
-            ParameterExpression operationParameter,
-            Expression activatorBody,
+            CompositeActivator activatorBody,
             IDictionary<string, object> partMetadata,
             Dependency[] dependencies)
         {
-            var isDisposable = typeof(IDisposable).IsAssignableFrom(partType);
+            if (!ContractHelpers.IsShared(partMetadata))
+                return activatorBody;
 
-            Expression result = activatorBody;
-            Expression activationScope = compositionContextParameter;
-            ParameterExpression calculatedScopeVar = null;
+            object sharingBoundaryMetadata;
+            if (!partMetadata.TryGetValue(Constants.SharedPartMetadataName, out sharingBoundaryMetadata))
+                sharingBoundaryMetadata = null;
 
-            var isShared = ContractHelpers.IsShared(partMetadata);
-            if (isShared)
+            var sharingBoundary = (string)sharingBoundaryMetadata;
+            var sharingKey = LifetimeContext.AllocateSharingId();
+
+            return (c, o) =>
             {
-                calculatedScopeVar = Expression.Variable(typeof(LifetimeContext), "ss");
-                activationScope = calculatedScopeVar;
-            }
-
-            if (isDisposable)
-            {
-                var temp = Expression.Variable(typeof(object), "dt");
-                result = Expression.Block(
-                    new[] { temp },
-                    Expression.Assign(temp, result),
-                    Expression.Call(activationScope, AddBoundInstanceMethod, Expression.Convert(temp, typeof(IDisposable))),
-                    temp);
-            }
-
-            if (isShared)
-            {
-                object sharingBoundary;
-                if (!partMetadata.TryGetValue(Constants.SharedPartMetadataName, out sharingBoundary))
-                    sharingBoundary = null;
-
-                var calculatedScopeAssignment = Expression.Assign(calculatedScopeVar,
-                    Expression.Call(compositionContextParameter,
-                        FindContextWithinMethod,
-                        Expression.Constant(sharingBoundary, typeof(string))));
-
-                var scopeChangeRewriter = new ExchangeRewriter(compositionContextParameter, calculatedScopeVar);
-                result = scopeChangeRewriter.Visit(result);
-
-                var getOrCreateContextParam = Expression.Parameter(typeof(LifetimeContext), "cs");
-                var contextParamRewriter = new ExchangeRewriter(calculatedScopeVar, getOrCreateContextParam);
-                result = contextParamRewriter.Visit(result);
-
-                var getOrCreateOperationParam = Expression.Parameter(typeof(CompositionOperation), "o");
-                var operationParamRewriter = new ExchangeRewriter(operationParameter, getOrCreateOperationParam);
-                result = operationParamRewriter.Visit(result);
-
-                var creator = Expression.Lambda<CompositeActivator>(result, getOrCreateContextParam, getOrCreateOperationParam);
-                var sharingKey = LifetimeContext.AllocateSharingId();
-
-                result = Expression.Block(
-                    new[] { calculatedScopeVar },
-                    calculatedScopeAssignment,
-                    Expression.Call(calculatedScopeVar, GetOrCreate, Expression.Constant(sharingKey), operationParameter, creator));
-            }
-
-            return result;
+                var scope = c.FindContextWithin(sharingBoundary);
+                if (object.ReferenceEquals(scope, c))
+                    return scope.GetOrCreate(sharingKey, o, activatorBody);
+                else
+                    return CompositionOperation.Run(scope, (c1, o1) => c1.GetOrCreate(sharingKey, o1, activatorBody));
+            };
         }
     }
 }
+ 

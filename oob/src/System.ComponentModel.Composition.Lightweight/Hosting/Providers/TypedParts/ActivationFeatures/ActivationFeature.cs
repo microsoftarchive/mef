@@ -24,17 +24,13 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Providers.TypedP
         /// Participate in the activator creation process.
         /// </summary>
         /// <param name="partType">The part type being activated.</param>
-        /// <param name="compositionContextParameter">Expression parameter for the composition context.</param>
-        /// <param name="operationParameter">Expression parameter for the composition operation.</param>
-        /// <param name="activatorBody">The activator body so far.</param>
+        /// <param name="activator">The activator body so far.</param>
         /// <param name="partMetadata">Metadata associated with the part being activated.</param>
         /// <param name="dependencies">Dependencies returned by a previous call to <see cref="GetDependencies"/>.</param>
         /// <returns>A new activator body, or the one already provided.</returns>
-        public abstract Expression RewriteActivator(
+        public abstract CompositeActivator RewriteActivator(
             Type partType, 
-            ParameterExpression compositionContextParameter,
-            ParameterExpression operationParameter,
-            Expression activatorBody, 
+            CompositeActivator activator, 
             IDictionary<string, object> partMetadata,
             Dependency[] dependencies);
 

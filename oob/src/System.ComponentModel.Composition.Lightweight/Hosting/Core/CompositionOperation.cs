@@ -20,7 +20,7 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
     {
         List<Action> _nonPrerequisiteActions;
         List<Action> _postCompositionActions;
-        Stack<object> _sharingLocks;
+        object _sharingLock;
 
         // Construct using Run() method.
         CompositionOperation() { }
@@ -80,11 +80,14 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
 
         internal void EnterSharingLock(object sharingLock)
         {
-            if (_sharingLocks == null)
-                _sharingLocks = new Stack<object>();
+            if (_sharingLock == null)
+            {
+                _sharingLock = sharingLock;
+                Monitor.Enter(sharingLock);
+            }
 
-            _sharingLocks.Push(sharingLock);
-            Monitor.Enter(sharingLock);
+            if (_sharingLock != sharingLock)
+                throw new InvalidOperationException("Sharing lock already taken in this root scope.");
         }
 
         void Complete()
@@ -115,11 +118,8 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Core
         /// </summary>
         public void Dispose()
         {
-            if (_sharingLocks != null)
-            {
-                while (_sharingLocks.Count != 0)
-                    Monitor.Exit(_sharingLocks.Pop());
-            }
+            if (_sharingLock != null)
+                Monitor.Exit(_sharingLock);
         }
     }
 }

@@ -51,6 +51,7 @@
     <Compile Include="Debugging\Proxies\ContainerConfigurationDebuggerProxy.cs" />
     <Compile Include="Debugging\Proxies\DiscoveredPartDebuggerProxy.cs" />
     <Compile Include="Hosting\Core\UpdateResult.cs" />
+    <Compile Include="Hosting\Providers\TypedParts\ActivationFeatures\DisposalFeature.cs" />
     <Compile Include="Hosting\Providers\TypedParts\Discovery\ParameterImportSite.cs" />
     <Compile Include="Hosting\Providers\TypedParts\ActivationFeatures\PropertyImportSite.cs" />
     <Compile Include="Hosting\Util\Formatters.cs" />
@@ -80,11 +81,9 @@
     <Compile Include="SharingBoundaryAttribute.cs" />
     <Compile Include="Hosting\Providers\CurrentScope\CurrentScopeExportDescriptorProvider.cs" />
     <Compile Include="ProgrammingModel\MetadataConstrainedDiscriminator.cs" />
-    <Compile Include="Hosting\Providers\TypedParts\ActivationFeatures\DynamicMethodOptimisationFeature.cs" />
     <Compile Include="Hosting\Providers\TypedParts\ContractHelpers.cs" />
     <Compile Include="Hosting\Util\DirectAttributeContext.cs" />
     <Compile Include="Hosting\Util\ExchangeRewriter.cs" />
-    <Compile Include="Hosting\Providers\TypedParts\ActivationFeatures\GetOrCreateLambdaRewriter.cs" />
     <Compile Include="Hosting\Providers\Lazy\LazyWithMetadataExportDescriptorProvider.cs" />
     <Compile Include="Hosting\Providers\TypedParts\ActivationFeatures\ActivationFeature.cs" />
     <Compile Include="Hosting\Core\LifetimeContext.cs" />

@@ -161,12 +161,14 @@ namespace System.ComponentModel.Composition.Lightweight.Hosting.Providers.TypedP
 
             Expression body = Expression.Convert(Expression.New(_constructor, paramActivatorCalls), typeof(object));
 
-            foreach (var feature in _activationFeatures)
-                body = feature.RewriteActivator(_partType, contextParam, operationParm, body, _partMetadata.Value, dependencies);
+            var activator = Expression
+                .Lambda<CompositeActivator>(body, contextParam, operationParm)
+                .Compile();
 
-            var activator = Expression.Lambda<CompositeActivator>(body, contextParam, operationParm);
+            foreach (var activationFeature in _activationFeatures)
+                activator = activationFeature.RewriteActivator(_partType, activator, _partMetadata.Value, dependencies);
 
-            _partActivator = activator.Compile();
+            _partActivator = activator;
             return _partActivator;
         }
 
