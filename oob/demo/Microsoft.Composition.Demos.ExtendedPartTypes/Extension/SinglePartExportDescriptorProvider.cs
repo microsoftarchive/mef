@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Composition.Hosting.Core;
+using System.Linq;
+using System.Text;
+
+namespace Microsoft.Composition.Demos.ExtendedPartTypes.Extension
+{
+    abstract class SinglePartExportDescriptorProvider : ExportDescriptorProvider
+    {
+        readonly Type _contractType;
+        readonly string _contractName;
+        readonly IDictionary<string, object> _metadata;
+
+        protected SinglePartExportDescriptorProvider(Type contractType, string contractName, IDictionary<string, object> metadata)
+        {
+            if (contractType == null) throw new ArgumentNullException("contractType");
+
+            _contractType = contractType;
+            _contractName = contractName;
+            _metadata = metadata ?? new Dictionary<string, object>();
+        }
+
+        protected bool IsSupportedContract(CompositionContract contract)
+        {
+            if (contract.ContractType != _contractType ||
+                contract.ContractName != _contractName)
+                return false;
+
+            if (contract.MetadataConstraints != null)
+            {
+                var constrainedSubset = new CompositionContract(contract.ContractType, contract.ContractName,
+                    contract.MetadataConstraints.Where(c => _metadata.ContainsKey(c.Key)).ToDictionary(c => c.Key, c => _metadata[c.Key]));
+
+                if (!contract.Equals(constrainedSubset))
+                    return false;
+            }
+
+            return true;
+        }
+
+        protected IDictionary<string, object> Metadata { get { return _metadata; } }
+    }
+}

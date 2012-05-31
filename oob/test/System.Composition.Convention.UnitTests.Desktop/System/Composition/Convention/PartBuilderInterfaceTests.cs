@@ -1,0 +1,162 @@
+using System.Collections.Generic;
+using System.Composition;
+using System.Composition.Convention;
+using System.Composition.Hosting;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace System.ComponentModel.Composition
+{
+    [TestClass]
+    public class PartBuilderInterfaceTests
+    {
+        public interface IFirst {}
+        public interface ISecond {}
+        public interface IThird {}
+        public interface IFourth {}
+        public interface IFifth : IFourth {}
+
+        public class Standard : IFirst, ISecond, IThird, IFifth
+        {
+        }
+
+        public class Dippy : IFirst, ISecond, IThird, IFifth, IDisposable
+        {
+            public void Dispose() {}
+        }
+
+        public class BareClass {}
+
+        public class Base :  IFirst, ISecond {}
+
+        public class Derived : Base, IThird, IFifth {}
+
+        public class Importer
+        {
+            [ImportMany] public IEnumerable<IFirst>  First { get; set; }
+            [ImportMany] public IEnumerable<ISecond> Second { get; set; }
+            [ImportMany] public IEnumerable<IThird>  Third { get; set; }
+            [ImportMany] public IEnumerable<IFourth> Fourth { get; set; }
+            [ImportMany] public IEnumerable<IFifth>  Fifth { get; set; }
+
+            [Import(AllowDefault=true)] public Base         Base { get; set; }
+            [Import(AllowDefault=true)] public Derived      Derived { get; set; }
+            [Import(AllowDefault=true)] public Dippy        Dippy { get; set; }
+            [Import(AllowDefault=true)] public Standard     Standard { get; set; }
+            [Import(AllowDefault=true)] public IDisposable  Disposable { get; set; }
+            [Import(AllowDefault=true)] public BareClass    BareClass { get; set; }
+        }
+ 
+        [TestMethod]
+        public void StandardExportInterfacesShouldWork()
+        {
+            // Export all interfaces except IDisposable, Export contracts on types without interfaces. except for disposable types
+            var builder = new ConventionBuilder();
+            builder.ForTypesMatching( (t) => true ).ExportInterfaces();
+            builder.ForTypesMatching( (t) => t.GetInterfaces().Where( (iface) => iface != typeof(System.IDisposable) ).Count() == 0 ).Export();
+
+            var container = new ContainerConfiguration()
+                .WithPart<Standard>(builder)
+                .WithPart<Dippy>(builder)
+                .WithPart<Derived>(builder)
+                .WithPart<BareClass>(builder)
+                .CreateContainer();
+
+            var importer = new Importer();
+            container.SatisfyImports(importer);
+
+            Assert.IsNotNull(importer.First);
+            Assert.IsTrue(importer.First.Count() == 3);
+            Assert.IsNotNull(importer.Second);
+            Assert.IsTrue(importer.Second.Count() == 3);
+            Assert.IsNotNull(importer.Third);
+            Assert.IsTrue(importer.Third.Count() == 3);
+            Assert.IsNotNull(importer.Fourth);
+            Assert.IsTrue(importer.Fourth.Count() == 3);
+            Assert.IsNotNull(importer.Fifth);
+            Assert.IsTrue(importer.Fifth.Count() == 3);
+
+            Assert.IsNull(importer.Base);
+            Assert.IsNull(importer.Derived);
+            Assert.IsNull(importer.Dippy);
+            Assert.IsNull(importer.Standard);
+            Assert.IsNull(importer.Disposable);
+            Assert.IsNotNull(importer.BareClass);
+        }
+
+
+        [TestMethod]
+        public void StandardExportInterfacesInterfaceFilterDefaultContractShouldWork()
+        {
+            //Same test as above only using default export builder
+            var builder = new ConventionBuilder();
+            builder.ForTypesMatching( (t) => true ).ExportInterfaces( (iface) => iface != typeof(System.IDisposable) );
+            builder.ForTypesMatching( (t) => t.GetInterfaces().Where( (iface) => iface != typeof(System.IDisposable) ).Count() == 0 ).Export();
+
+            var container = new ContainerConfiguration()
+                .WithPart<Standard>(builder)
+                .WithPart<Dippy>(builder)
+                .WithPart<Derived>(builder)
+                .WithPart<BareClass>(builder)
+                .CreateContainer();
+
+            var importer = new Importer();
+            container.SatisfyImports(importer);
+
+            Assert.IsNotNull(importer.First);
+            Assert.IsTrue(importer.First.Count() == 3);
+            Assert.IsNotNull(importer.Second);
+            Assert.IsTrue(importer.Second.Count() == 3);
+            Assert.IsNotNull(importer.Third);
+            Assert.IsTrue(importer.Third.Count() == 3);
+            Assert.IsNotNull(importer.Fourth);
+            Assert.IsTrue(importer.Fourth.Count() == 3);
+            Assert.IsNotNull(importer.Fifth);
+            Assert.IsTrue(importer.Fifth.Count() == 3);
+
+            Assert.IsNull(importer.Base);
+            Assert.IsNull(importer.Derived);
+            Assert.IsNull(importer.Dippy);
+            Assert.IsNull(importer.Standard);
+            Assert.IsNull(importer.Disposable);
+            Assert.IsNotNull(importer.BareClass);
+        }
+
+        [TestMethod]
+        public void StandardExportInterfacesInterfaceFilterConfiguredContractShouldWork()
+        {
+            //Same test as above only using default export builder
+            var builder = new ConventionBuilder();
+            builder.ForTypesMatching( (t) => true).ExportInterfaces( (iface) => iface != typeof(System.IDisposable), (iface, bldr) => bldr.AsContractType((Type)iface) );
+            builder.ForTypesMatching( (t) => t.GetInterfaces().Where( (iface) => iface != typeof(System.IDisposable) ).Count() == 0).Export();
+
+            var container = new ContainerConfiguration()
+                .WithPart<Standard>(builder)
+                .WithPart<Dippy>(builder)
+                .WithPart<Derived>(builder)
+                .WithPart<BareClass>(builder)
+                .CreateContainer();
+
+            var importer = new Importer();
+            container.SatisfyImports(importer);
+            
+            Assert.IsNotNull(importer.First);
+            Assert.IsTrue(importer.First.Count() == 3);
+            Assert.IsNotNull(importer.Second);
+            Assert.IsTrue(importer.Second.Count() == 3);
+            Assert.IsNotNull(importer.Third);
+            Assert.IsTrue(importer.Third.Count() == 3);
+            Assert.IsNotNull(importer.Fourth);
+            Assert.IsTrue(importer.Fourth.Count() == 3);
+            Assert.IsNotNull(importer.Fifth);
+            Assert.IsTrue(importer.Fifth.Count() == 3);
+
+            Assert.IsNull(importer.Base);
+            Assert.IsNull(importer.Derived);
+            Assert.IsNull(importer.Dippy);
+            Assert.IsNull(importer.Standard);
+            Assert.IsNull(importer.Disposable);
+            Assert.IsNotNull(importer.BareClass);
+        }
+    }
+}

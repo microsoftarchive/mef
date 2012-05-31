@@ -1,0 +1,57 @@
+﻿// -----------------------------------------------------------------------
+// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// -----------------------------------------------------------------------
+
+using System.Reflection;
+using System.Composition.Hosting.Core;
+using System.Composition.Runtime;
+using System.Linq;
+using System.Threading;
+using System.Composition.Hosting.Util;
+using System.Collections.Generic;
+using System.Composition.Hosting.Providers.Metadata;
+
+namespace System.Composition.Hosting.Providers.Lazy
+{
+    class LazyWithMetadataExportDescriptorProvider : ExportDescriptorProvider
+    {
+        static readonly MethodInfo GetLazyDefinitionsMethod = typeof(LazyWithMetadataExportDescriptorProvider).GetTypeInfo().GetDeclaredMethod("GetLazyDefinitions");
+
+        public override IEnumerable<ExportDescriptorPromise> GetExportDescriptors(CompositionContract exportKey, DependencyAccessor definitionAccessor)
+        {
+            if (!exportKey.ContractType.IsConstructedGenericType || exportKey.ContractType.GetGenericTypeDefinition() != typeof(Lazy<,>))
+                return NoExportDescriptors;
+
+            var ga = exportKey.ContractType.GenericTypeArguments;
+            var gld = GetLazyDefinitionsMethod.MakeGenericMethod(ga[0], ga[1]);
+            var gldm = gld.CreateStaticDelegate<Func<CompositionContract, DependencyAccessor, object>>();
+            return (ExportDescriptorPromise[])gldm(exportKey, definitionAccessor);
+        }
+
+        static ExportDescriptorPromise[] GetLazyDefinitions<TValue, TMetadata>(CompositionContract lazyContract, DependencyAccessor definitionAccessor)
+        {
+            var providerDependency = definitionAccessor.ResolveRequiredDependency(
+                "metadata",
+                new CompositionContract(typeof(Func<IDictionary<string, object>, TMetadata>), MetadataViewProviderExportDescriptorProvider.MetadataViewProviderContractName),
+                true);
+
+            return definitionAccessor.ResolveDependencies("value", lazyContract.ChangeType(typeof(TValue)), false)
+                .Select(d => new ExportDescriptorPromise(
+                    lazyContract,
+                    Formatters.Format(typeof(Lazy<TValue, TMetadata>)),
+                    false,
+                    () => new[] { d, providerDependency },
+                    _ =>
+                    {
+                        var provider = providerDependency.Target.GetDescriptor().Activator;
+                        var dsc = d.Target.GetDescriptor();
+                        var da = dsc.Activator;
+                        return ExportDescriptor.Create((c, o) => {
+                            var providerVal = (Func<IDictionary<string, object>, TMetadata>)provider(c, o);
+                            return new Lazy<TValue, TMetadata>(() => (TValue)CompositionOperation.Run(c, da), providerVal(dsc.Metadata));
+                        }, dsc.Metadata);
+                    }))
+                .ToArray();
+        }
+    }
+}
