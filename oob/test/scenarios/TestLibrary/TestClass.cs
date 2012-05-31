@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
+using System.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,9 +11,9 @@ namespace TestLibrary
     [Export]
     public class ClassWithDependecy
     {
-        public Dependency _dep;
+        public TestDependency _dep;
         [ImportingConstructor]
-        public ClassWithDependecy(Dependency dep)
+        public ClassWithDependecy(TestDependency dep)
         {
             _dep = dep;
         }
@@ -33,9 +33,9 @@ namespace TestLibrary
 
     [Export]
     [Export(typeof(IDependency))]
-    public class Dependency :IDependency
+    public class TestDependency :IDependency
     {
-        public Dependency()
+        public TestDependency()
         {
         }
     }

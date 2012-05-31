@@ -1,5 +1,1 @@
-set pkgversion=%1
-msbuild /T:Build /P:Configuration=Release MefOutOfBand.sln
-mkdir distrib
-.nuget\NuGet.exe pack -Version %pkgversion% src\System.ComponentModel.Composition.Lightweight\Microsoft.Mef.Lightweight.nuspec -OutputDirectory distrib
-.nuget\NuGet.exe pack -Version %pkgversion% src\System.ComponentModel.Composition.Web.Mvc\Microsoft.Mef.MvcCompositionProvider.nuspec -OutputDirectory distrib
+"%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" MEF.sln /p:Configuration=Release /p:Platform="Any CPU" /p:OutDir=%~dp0bin\
