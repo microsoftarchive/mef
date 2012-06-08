@@ -4,13 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Web.Http.Dependencies;
 
 namespace System.Composition.Web.Http
 {
     /// <summary>
     /// Implements IDependencyScope over a MEF lightweight container.
     /// </summary>
-    public class StandaloneDependencyScope : IDisposable
+    public class StandaloneDependencyScope : IDependencyScope
     {
         readonly Export<CompositionContext> _compositionScope;
 

@@ -29,8 +29,9 @@ namespace Microsoft.Composition.Demos.ExtendedPartTypes.Extension
 
             if (contract.MetadataConstraints != null)
             {
+                var subsetOfConstraints = contract.MetadataConstraints.Where(c => _metadata.ContainsKey(c.Key)).ToDictionary(c => c.Key, c => _metadata[c.Key]);
                 var constrainedSubset = new CompositionContract(contract.ContractType, contract.ContractName,
-                    contract.MetadataConstraints.Where(c => _metadata.ContainsKey(c.Key)).ToDictionary(c => c.Key, c => _metadata[c.Key]));
+                    subsetOfConstraints.Count == 0 ? null : subsetOfConstraints);
 
                 if (!contract.Equals(constrainedSubset))
                     return false;

@@ -54,7 +54,7 @@ namespace System.Composition.Web.Mvc
 
         static void ConfigureWebApi()
         {
-            System.Web.Http.GlobalConfiguration.Configuration.ServiceResolver.SetResolver(new CompositionScopeHttpDependencyResolver());
+            System.Web.Http.GlobalConfiguration.Configuration.DependencyResolver = new CompositionScopeHttpDependencyResolver();
         }
 
         static void ConfigureMvc()

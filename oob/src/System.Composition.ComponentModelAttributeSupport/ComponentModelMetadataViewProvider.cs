@@ -1,4 +1,7 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// -----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Composition.Hosting.Core;

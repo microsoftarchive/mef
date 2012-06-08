@@ -197,5 +197,41 @@ namespace System.Composition.UnitTests
             var cons = cc.GetExport<AConsumer>();
             Assert.AreEqual(2, cons.AFactories.Length);
         }
+
+        [Export]
+        public class Disposable : IDisposable
+        {
+            public bool IsDisposed { get; set; }
+
+            public void Dispose()
+            {
+                IsDisposed = true;
+            }
+        }
+
+        [Export]
+        public class HasDisposableDependency
+        {
+            [Import]
+            public Disposable Dependency { get; set; }
+        }
+
+        [Export]
+        public class HasFactory
+        {
+            [Import]
+            public ExportFactory<HasDisposableDependency> Factory { get; set; }
+        }
+
+        [TestMethod]
+        public void WhenReleasingAnExportFromAnExportFactoryItsNonSharedDependenciesAreDisposed()
+        {
+            var cc = CreateContainer(typeof(Disposable), typeof(HasDisposableDependency), typeof(HasFactory));
+            var hf = cc.GetExport<HasFactory>();
+            var hddx = hf.Factory.CreateExport();
+            var hdd = hddx.Value;
+            hddx.Dispose();
+            Assert.IsTrue(hdd.Dependency.IsDisposed);
+        }
     }
 }

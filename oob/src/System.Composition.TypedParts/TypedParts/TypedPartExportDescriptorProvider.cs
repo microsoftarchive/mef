@@ -89,11 +89,14 @@ namespace System.Composition.TypedParts
                 {
                     foreach (var export in forKey)
                     {
-                        var constrainedSubset = new CompositionContract(unconstrained.ContractType, unconstrained.ContractName,
-                            contract.MetadataConstraints.Where(c => export.Metadata.ContainsKey(c.Key)).ToDictionary(c => c.Key, c => export.Metadata[c.Key]));
+                        var subsettedConstraints = contract.MetadataConstraints.Where(c => export.Metadata.ContainsKey(c.Key)).ToDictionary(c => c.Key, c => export.Metadata[c.Key]);
+                        if (subsettedConstraints.Count != 0)
+                        {
+                            var constrainedSubset = new CompositionContract(unconstrained.ContractType, unconstrained.ContractName, subsettedConstraints);
 
-                        if (constrainedSubset.Equals(contract))
-                            AddDiscoveredExport(export, contract);
+                            if (constrainedSubset.Equals(contract))
+                                AddDiscoveredExport(export, contract);
+                        }
                     }
                 }
             }

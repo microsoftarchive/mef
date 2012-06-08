@@ -17,7 +17,7 @@ namespace Microsoft.Composition.Demos.DefaultOnly.Extension
                 return NoExportDescriptors;
 
             var implementations = descriptorAccessor.ResolveDependencies("test for default", contract, false);
-            if (!implementations.Any())
+            if (implementations.Any())
                 return NoExportDescriptors;
 
             var defaultImplementationDiscriminator = Constants.DefaultContractNamePrefix + (contract.ContractName ?? "");

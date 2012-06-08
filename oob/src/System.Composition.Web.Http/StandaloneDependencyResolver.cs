@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Composition.Hosting;
 using System.Composition.Hosting.Core;
+using System.Web.Http.Dependencies;
 
 namespace System.Composition.Web.Http
 {
@@ -13,7 +14,7 @@ namespace System.Composition.Web.Http
     /// A depdendency resolver for ASP.NET WebAPI that is independent of the
     /// rest of the web stack.
     /// </summary>
-    public class StandaloneDependencyResolver : StandaloneDependencyScope
+    public class StandaloneDependencyResolver : StandaloneDependencyScope, IDependencyResolver
     {
         readonly ExportFactory<CompositionContext> _requestScopeFactory;
 
@@ -38,7 +39,7 @@ namespace System.Composition.Web.Http
         /// Create a new request-specific scope.
         /// </summary>
         /// <returns>A new scope.</returns>
-        public StandaloneDependencyScope BeginScope()
+        public IDependencyScope BeginScope()
         {
             return new StandaloneDependencyScope(_requestScopeFactory.CreateExport());
         }

@@ -58,9 +58,11 @@
     <Compile Include="ConcurrencyTests.cs" />
     <Compile Include="ContainerTests.cs" />
     <Compile Include="ContractTests.cs" />
+    <Compile Include="CustomerReportedMetadataBug.cs" />
     <Compile Include="DictionaryImportTests.cs" />
     <Compile Include="DiscoveryTests.cs" />
     <Compile Include="ErrorMessageQualityTests.cs" />
+    <Compile Include="ExportDescriptorProviderTests.cs" />
     <Compile Include="ExportMetadataDiscoveryTests.cs" />
     <Compile Include="CompositionContextExtensionsTests.cs" />
     <Compile Include="ImportManyTests.cs" />

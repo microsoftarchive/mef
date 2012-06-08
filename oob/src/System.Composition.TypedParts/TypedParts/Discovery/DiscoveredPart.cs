@@ -83,30 +83,34 @@ namespace System.Composition.TypedParts.Discovery
         IEnumerable<CompositionDependency> GetPartActivatorDependencies(DependencyAccessor definitionAccessor)
         {
             var partTypeAsType = _partType.AsType();
-            foreach (var c in _partType.DeclaredConstructors.Where(ci => ci.IsPublic && !(ci.IsStatic)))
+
+            if (_constructor == null)
             {
-                if (_attributeContext.GetDeclaredAttribute<ImportingConstructorAttribute>(partTypeAsType, c) != null)
+                foreach (var c in _partType.DeclaredConstructors.Where(ci => ci.IsPublic && !(ci.IsStatic)))
                 {
-                    if (_constructor != null)
+                    if (_attributeContext.GetDeclaredAttribute<ImportingConstructorAttribute>(partTypeAsType, c) != null)
                     {
-                        //Todo: Localise me
-                        var message = string.Format("Multiple importing constructors were found on type '{0}'.", _partType);
-                        throw new CompositionFailedException(message);
+                        if (_constructor != null)
+                        {
+                            //Todo: Localise me
+                            var message = string.Format("Multiple importing constructors were found on type '{0}'.", _partType);
+                            throw new CompositionFailedException(message);
+                        }
+
+                        _constructor = c;
                     }
-
-                    _constructor = c;
                 }
-            }
 
-            if (_constructor == null)
-                _constructor = _partType.DeclaredConstructors
-                    .FirstOrDefault(ci => ci.IsPublic && !(ci.IsStatic || ci.GetParameters().Any()));
+                if (_constructor == null)
+                    _constructor = _partType.DeclaredConstructors
+                        .FirstOrDefault(ci => ci.IsPublic && !(ci.IsStatic || ci.GetParameters().Any()));
 
-            if (_constructor == null)
-            {
-                //Todo: Localise me
-                var message = string.Format("No importing constructor was found on type '{0}'.", _partType);
-                throw new CompositionFailedException(message);
+                if (_constructor == null)
+                {
+                    //Todo: Localise me
+                    var message = string.Format("No importing constructor was found on type '{0}'.", _partType);
+                    throw new CompositionFailedException(message);
+                }
             }
 
             var cps = _constructor.GetParameters();

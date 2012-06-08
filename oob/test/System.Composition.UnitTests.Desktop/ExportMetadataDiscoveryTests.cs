@@ -98,5 +98,23 @@ namespace System.Composition.UnitTests
 
             CollectionAssert.AreEquivalent(new[] { "A", "B", "B" }, withNames.Metadata.Name);
         }
+        
+        [Export]
+        public class ConstructorImported { }
+
+        [Export("A"), Export("B")]
+        public class MultipleExportsNonDefaultConstructor
+        {
+            [ImportingConstructor]
+            public MultipleExportsNonDefaultConstructor(ConstructorImported c) { }
+        }
+
+        [TestMethod]
+        public void MultipleExportsCanBeRetrievedWhenANonDefaultConstructorExists()
+        {
+            var c = CreateContainer(typeof(ConstructorImported), typeof(MultipleExportsNonDefaultConstructor));
+            c.GetExport<MultipleExportsNonDefaultConstructor>("A");
+            c.GetExport<MultipleExportsNonDefaultConstructor>("B");
+        }
     }
 }

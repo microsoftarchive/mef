@@ -21,9 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "demo", "demo", "{2CEDF191-E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{08EA7785-2637-42AF-AEFE-97A6C23CA036}"
 	ProjectSection(SolutionItems) = preProject
-		..\Build\Microsoft.Composition.nuspec = ..\Build\Microsoft.Composition.nuspec
-		..\Build\Microsoft.Mef.Lightweight.nuspec = ..\Build\Microsoft.Mef.Lightweight.nuspec
-		..\Build\Microsoft.Mef.MvcCompositionProvider.nuspec = ..\Build\Microsoft.Mef.MvcCompositionProvider.nuspec
 		CodePlexKey.snk = CodePlexKey.snk
 		build.bat = build.bat
 	EndProjectSection
