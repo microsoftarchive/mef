@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 
 using System.Composition.Hosting.Core;

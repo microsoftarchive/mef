@@ -24,19 +24,19 @@ namespace OnYourWayHome.ServiceBus.Parts
         public string ServiceNamespace
         {
             // TODO: Enter your Service Namespace from Azure
-            get { return null; }
+            get { return "MyServiceNamespace"; }
         }
 
         public string IssuerName
         {
             // TODO: Enter the issuer name from Azure
-            get { return null; }
+            get { return "MyIssuerName"; }
         }
 
         public string IssuerSecret
         {
             // TODO: Enter the issuer secret
-            get { return null; }
+            get { return "abcdefghijklmnopqurstuvwxyzabcdefghijklmnop="; }
         }
     }
 }

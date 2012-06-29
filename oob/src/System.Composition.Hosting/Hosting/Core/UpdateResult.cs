@@ -1,9 +1,10 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Internal;
 
 namespace System.Composition.Hosting.Core
 {
@@ -45,8 +46,7 @@ namespace System.Composition.Hosting.Core
         {
             if (_results == null)
             {
-                if (_remainingProviders.Count != 0)
-                    throw new InvalidOperationException("Providers remain to be queried.");
+                Assumes.IsTrue(_remainingProviders.Count == 0, "Providers remain to be queried.");
 
                 if (_providedDescriptors.Count == 0)
                     _results = NoPromises;

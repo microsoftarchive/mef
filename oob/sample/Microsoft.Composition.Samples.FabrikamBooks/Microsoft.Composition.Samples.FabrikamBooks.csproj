@@ -195,9 +195,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\System.Composition.Web.Mvc\System.Composition.Web.Mvc.csproj">
+    <ProjectReference Include="..\..\demo\Microsoft.Composition.Demos.Web.Mvc\Microsoft.Composition.Demos.Web.Mvc.csproj">
       <Project>{014116f2-df99-4700-9267-294407ba3f0c}</Project>
-      <Name>System.Composition.Web.Mvc</Name>
+      <Name>Microsoft.Composition.Demos.Web.Mvc</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\System.Composition.AttributedModel\System.Composition.AttributedModel.csproj">
       <Project>{c6257381-c624-494a-a9d9-5586e60856ea}</Project>

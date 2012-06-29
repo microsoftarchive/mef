@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -11,6 +11,8 @@ using System.Composition.Hosting.Providers.Lazy;
 using System.Composition.Hosting.Providers.Metadata;
 using System.Composition.Runtime;
 using System.Linq;
+
+using Microsoft.Internal;
 
 namespace System.Composition.Hosting
 {
@@ -26,7 +28,8 @@ namespace System.Composition.Hosting
 
         CompositionHost(LifetimeContext rootLifetimeContext)
         {
-            if (rootLifetimeContext == null) throw new ArgumentNullException("rootLifetimeContext");
+            Requires.ArgumentNotNull(rootLifetimeContext, "rootLifetimeContext");
+
             _rootLifetimeContext = rootLifetimeContext;
         }
 
@@ -45,7 +48,7 @@ namespace System.Composition.Hosting
         /// <returns>The container as an <see cref="CompositionHost"/>.</returns>
         public static CompositionHost CreateCompositionHost(IEnumerable<ExportDescriptorProvider> providers)
         {
-            if (providers == null) throw new ArgumentNullException("providers");
+            Requires.ArgumentNotNull(providers, "providers");
 
             var allProviders = new ExportDescriptorProvider[] {
                 new LazyExportDescriptorProvider(),

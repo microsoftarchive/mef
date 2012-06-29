@@ -2,7 +2,11 @@ using System.Collections.Generic;
 using System.Composition.Convention.UnitTests;
 using System.Linq;
 using System.Reflection;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.Convention
 {

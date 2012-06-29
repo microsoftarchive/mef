@@ -1,14 +1,17 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
 using System.Composition.Hosting.Util;
 using System.Composition.Runtime;
 using System.Threading;
+using Microsoft.Internal;
 
 namespace System.Composition.Hosting.Core
 {
+    using System.Composition.Hosting.Properties;
+
     /// <summary>
     /// Represents a node in the lifetime tree. A <see cref="LifetimeContext"/> is the unit of
     /// sharing for shared parts, controls the disposal of bound parts, and can be used to retrieve
@@ -92,8 +95,7 @@ namespace System.Composition.Hosting.Core
 
             // To generate acceptable error messages here we're going to need to pass in a description
             // of the component, or otherwise find a way to get one.
-            throw new CompositionFailedException(string.Format(
-                "The component (unknown) cannot be created outside the {0} sharing boundary.", sharingBoundary));
+            throw ThrowHelper.CompositionException(string.Format(Resources.Component_NotCreatableOutsideSharingBoundary, sharingBoundary));
         }
 
         /// <summary>

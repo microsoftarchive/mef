@@ -4,16 +4,19 @@ using OnYourWayHome.ServiceBus.Serialization;
 
 namespace OnYourWayHome.ServiceBus
 {
-    public abstract class ServiceBusAdapter
+    public static class ServiceBusAdapter
     {
-        public static ServiceBusAdapter Current
+        public static IServiceBusAdapter Current
         {
             get;
             set;
         }
+    }
 
-        public abstract IDataContractSerializer CreateJsonSerializer(Type type);
+    public interface IServiceBusAdapter
+    {
+        IDataContractSerializer CreateJsonSerializer(Type type);
 
-        public abstract byte[] ComputeHmacSha256(byte[] secretKey, byte[] data);
+        byte[] ComputeHmacSha256(byte[] secretKey, byte[] data);
     }
 }

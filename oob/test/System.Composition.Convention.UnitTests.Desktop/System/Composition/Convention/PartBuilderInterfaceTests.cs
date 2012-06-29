@@ -3,7 +3,12 @@ using System.Composition;
 using System.Composition.Convention;
 using System.Composition.Hosting;
 using System.Linq;
+using System.Reflection;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.ComponentModel.Composition
 {
@@ -53,7 +58,7 @@ namespace System.ComponentModel.Composition
             // Export all interfaces except IDisposable, Export contracts on types without interfaces. except for disposable types
             var builder = new ConventionBuilder();
             builder.ForTypesMatching( (t) => true ).ExportInterfaces();
-            builder.ForTypesMatching( (t) => t.GetInterfaces().Where( (iface) => iface != typeof(System.IDisposable) ).Count() == 0 ).Export();
+            builder.ForTypesMatching( (t) => t.GetTypeInfo().ImplementedInterfaces.Where( (iface) => iface != typeof(System.IDisposable) ).Count() == 0 ).Export();
 
             var container = new ContainerConfiguration()
                 .WithPart<Standard>(builder)
@@ -91,7 +96,7 @@ namespace System.ComponentModel.Composition
             //Same test as above only using default export builder
             var builder = new ConventionBuilder();
             builder.ForTypesMatching( (t) => true ).ExportInterfaces( (iface) => iface != typeof(System.IDisposable) );
-            builder.ForTypesMatching( (t) => t.GetInterfaces().Where( (iface) => iface != typeof(System.IDisposable) ).Count() == 0 ).Export();
+            builder.ForTypesMatching( (t) => t.GetTypeInfo().ImplementedInterfaces.Where( (iface) => iface != typeof(System.IDisposable) ).Count() == 0 ).Export();
 
             var container = new ContainerConfiguration()
                 .WithPart<Standard>(builder)
@@ -128,7 +133,7 @@ namespace System.ComponentModel.Composition
             //Same test as above only using default export builder
             var builder = new ConventionBuilder();
             builder.ForTypesMatching( (t) => true).ExportInterfaces( (iface) => iface != typeof(System.IDisposable), (iface, bldr) => bldr.AsContractType((Type)iface) );
-            builder.ForTypesMatching( (t) => t.GetInterfaces().Where( (iface) => iface != typeof(System.IDisposable) ).Count() == 0).Export();
+            builder.ForTypesMatching( (t) => t.GetTypeInfo().ImplementedInterfaces.Where( (iface) => iface != typeof(System.IDisposable) ).Count() == 0).Export();
 
             var container = new ContainerConfiguration()
                 .WithPart<Standard>(builder)

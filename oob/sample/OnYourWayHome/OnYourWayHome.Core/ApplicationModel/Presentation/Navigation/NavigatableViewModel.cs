@@ -6,6 +6,7 @@ namespace OnYourWayHome.ApplicationModel.Presentation.Navigation
     // Represents a ViewModel that is used in navigation-based applications
     public abstract partial class NavigatableViewModel : Bindable
     {
+        public const string SharingBoundary = "ViewModel";
         private readonly INavigationService _navigationService;
         private ICommand _goBackCommand;
         private ICommand _goHomeCommand;

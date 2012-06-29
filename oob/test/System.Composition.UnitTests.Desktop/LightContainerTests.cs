@@ -2,7 +2,11 @@
 using System.Linq;
 using System.Text;
 using System.Collections.Generic;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 using System.Diagnostics;
 using System.Composition;
 using System.Composition.Hosting;
@@ -110,7 +114,7 @@ namespace System.Composition.UnitTests
         public void VerifyAssemblyNameCanBeUsedWithContainer()
         {
             var test = new ContainerConfiguration()
-                .WithAssembly(typeof(ClassWithDependecy).Assembly)
+                .WithAssembly(typeof(ClassWithDependecy).GetTypeInfo().Assembly)
                 .CreateContainer();
             var b = test.GetExport<ClassWithDependecy>();
             Assert.IsNotNull(b);
@@ -121,7 +125,7 @@ namespace System.Composition.UnitTests
         public void VerifyAssemblyWithTwoBaseTypeWithOnlyOneExportedWorks()
         {
             var test = new ContainerConfiguration()
-                .WithAssembly(typeof(ClassWithDependecy).Assembly)
+                .WithAssembly(typeof(ClassWithDependecy).GetTypeInfo().Assembly)
                 .CreateContainer();
             var b = test.GetExport<ClassWithDependecyAndSameBaseType>();
             Assert.IsNotNull(b);

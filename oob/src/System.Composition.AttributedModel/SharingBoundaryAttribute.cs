@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 using System;
 using System.Collections.ObjectModel;

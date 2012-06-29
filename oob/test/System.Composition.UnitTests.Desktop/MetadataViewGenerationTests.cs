@@ -6,7 +6,11 @@ using System.Composition.UnitTests.Util;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.Lightweight.UnitTests
 {
@@ -111,7 +115,7 @@ namespace System.Composition.Lightweight.UnitTests
             Assert.AreEqual("No export was found for the contract 'Func<IDictionary<String, Object>, IUnsupportedMetadataView> \"MetadataViewProvider\"'" + Environment.NewLine +
                 " -> required by import 'metadata' of part 'Lazy<HasUnsupportedMetadata, IUnsupportedMetadataView>'" + Environment.NewLine +
                 " -> required by import 'LazyImport' of part 'ImportsUnsupportedMetadataView'" + Environment.NewLine +
-                " -> required by initial request for contract 'ImportsUnsupportedMetadataView'.", x.Message);
+                " -> required by initial request for contract 'ImportsUnsupportedMetadataView'", x.Message);
         }
     }
 }

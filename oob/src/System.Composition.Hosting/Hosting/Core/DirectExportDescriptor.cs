@@ -1,8 +1,9 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Microsoft.Internal;
 
 namespace System.Composition.Hosting.Core
 {
@@ -13,8 +14,8 @@ namespace System.Composition.Hosting.Core
 
         public DirectExportDescriptor(CompositeActivator activator, IDictionary<string, object> metadata)
         {
-            if (activator == null) throw new ArgumentNullException("activator");
-            if (metadata == null) throw new ArgumentNullException("metadata");
+            Requires.ArgumentNotNull(activator, "activator");
+            Requires.ArgumentNotNull(metadata, "metadata");
 
             _activator = activator;
             _metadata = metadata;

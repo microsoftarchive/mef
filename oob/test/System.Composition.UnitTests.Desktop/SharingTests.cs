@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 using System.Composition;
 using System.Composition.Hosting;
 using System.Composition.Hosting.Providers;

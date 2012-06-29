@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 using System.Composition.Hosting;
 using System.Composition.Hosting.Core;
 using System.Composition.UnitTests.Util;
@@ -73,20 +77,23 @@ namespace System.Composition.UnitTests
             public ConstructorPropertyA A { get; private set; }
         }
 
-        public interface ICircularM { string Name { get; } }
+        public class CircularM
+        {
+            public string Name { get; set; }
+        }
 
         [Export, ExportMetadata("Name", "A")]
         public class MetadataCircularityA
         {
             [Import]
-            public Lazy<MetadataCircularityB, ICircularM> B { get; set; }
+            public Lazy<MetadataCircularityB, CircularM> B { get; set; }
         }
 
         [Export, ExportMetadata("Name", "B"), Shared]
         public class MetadataCircularityB
         {
             [Import]
-            public Lazy<MetadataCircularityA, ICircularM> A { get; set; }
+            public Lazy<MetadataCircularityA, CircularM> A { get; set; }
         }
 
         [Export, Shared]

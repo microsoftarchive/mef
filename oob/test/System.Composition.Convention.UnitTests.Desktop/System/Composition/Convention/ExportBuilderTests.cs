@@ -3,7 +3,12 @@ using System.Composition;
 using System.Composition.Convention.UnitTests;
 using System.Linq;
 using System.Composition.Convention;
+using System.Reflection;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.Convention
 {
@@ -21,7 +26,7 @@ namespace System.Composition.Convention
             var builder = new ConventionBuilder();
             builder.ForType<FooImpl>().Export<IFoo>();
 
-            var exports = builder.GetCustomAttributes(typeof(FooImpl), typeof(FooImpl)).Where<Attribute>(e => e is ExportAttribute).Cast<ExportAttribute>();
+            var exports = builder.GetCustomAttributes(typeof(FooImpl), typeof(FooImpl).GetTypeInfo()).Where<Attribute>(e => e is ExportAttribute).Cast<ExportAttribute>();
             Assert.AreEqual(1, exports.Count());
             Assert.AreEqual(exports.First().ContractType, typeof(IFoo));
         }
@@ -32,7 +37,7 @@ namespace System.Composition.Convention
             var builder = new ConventionBuilder();
             builder.ForType(typeof(FooImpl)).Export((c) => c.AsContractType(typeof(IFoo)));
 
-            var exports = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl)).Where<Attribute>(e => e is ExportAttribute).Cast<ExportAttribute>();
+            var exports = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl).GetTypeInfo()).Where<Attribute>(e => e is ExportAttribute).Cast<ExportAttribute>();
             Assert.AreEqual(1, exports.Count());
             Assert.AreEqual(exports.First().ContractType, typeof(IFoo));
         }
@@ -117,14 +122,14 @@ namespace System.Composition.Convention
 
         private static ExportAttribute GetExportAttribute(ConventionBuilder builder)
         {
-            var list = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl));
+            var list = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl).GetTypeInfo());
             Assert.AreEqual(1, list.Length);
             return list[0] as ExportAttribute;
         }
 
         private static ExportMetadataAttribute GetExportMetadataAttribute(ConventionBuilder builder)
         {
-            var list = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl));
+            var list = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl).GetTypeInfo());
             Assert.AreEqual(2, list.Length);
             return list[1] as ExportMetadataAttribute;
         }

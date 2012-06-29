@@ -3,7 +3,11 @@
 // -----------------------------------------------------------------------
 using System;
 using System.Runtime.Serialization;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.Convention
 {

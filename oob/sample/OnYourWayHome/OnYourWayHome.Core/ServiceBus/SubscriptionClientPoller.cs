@@ -18,7 +18,7 @@ namespace OnYourWayHome.ServiceBus
 
             _subscription = subscription;
             _callback = callback;
-            Task.Run(() => OnTimeElapsed(null), this.Token).Start();
+            Task.Run(() => OnTimeElapsed(null), this.Token);
         }
 
         protected override void Dispose(bool disposing)

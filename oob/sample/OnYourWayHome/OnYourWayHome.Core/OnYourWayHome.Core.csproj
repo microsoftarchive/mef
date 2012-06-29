@@ -47,13 +47,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ApplicationModel\Presentation\Navigation\NavigatableViewModel.NavigationCommand.cs" />
-    <Compile Include="ViewModels\Parts\AddGroceryItemViewModel.cs" />
+    <Compile Include="ViewModels\AddGroceryItemViewModel.cs" />
     <Compile Include="ApplicationModel\Eventing\EventServices.cs" />
     <Compile Include="ApplicationModel\Presentation\Input\Command.cs" />
     <Compile Include="ApplicationModel\Presentation\Input\CommandOfT.cs" />
     <Compile Include="ApplicationModel\Presentation\Bindable.cs" />
-    <Compile Include="ViewModels\Parts\ShoppingListViewModel.CheckoutCartCommand.cs" />
-    <Compile Include="ViewModels\Parts\ShoppingListViewModel.cs" />
+    <Compile Include="ViewModels\ShoppingListViewModel.CheckoutCartCommand.cs" />
+    <Compile Include="ViewModels\ShoppingListViewModel.cs" />
     <Compile Include="Assumes.cs" />
     <Compile Include="ApplicationModel\DisposableObject.cs" />
     <Compile Include="ApplicationModel\Eventing\EventAggregatorExtensions.cs" />
@@ -117,7 +117,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

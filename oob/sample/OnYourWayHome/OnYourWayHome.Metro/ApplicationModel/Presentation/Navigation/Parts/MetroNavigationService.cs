@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Composition;
-using OnYourWayHome.ApplicationModel.Composition;
-using OnYourWayHome.ViewModels.Parts;
+using OnYourWayHome.ViewModels;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -12,8 +11,10 @@ namespace OnYourWayHome.ApplicationModel.Presentation.Navigation.Parts
     // navigates from a ViewModel type to a View type
     internal class MetroNavigationService : NavigationService<Type>
     {
-        public MetroNavigationService(CompositionContext compositionContext)
-            : base(compositionContext)
+        public MetroNavigationService(
+            [SharingBoundary(NavigatableViewModel.SharingBoundary)]
+            ExportFactory<CompositionContext> contextFactory)
+            : base(contextFactory)
         {
             Frame.Navigated += OnFrameNavigated;
 
@@ -45,6 +46,8 @@ namespace OnYourWayHome.ApplicationModel.Presentation.Navigation.Parts
         {
             if (e.NavigationMode == NavigationMode.New)
             {
+                // We use OnFrameNavigated with NavigationMode.New to identify when a new page is created
+                // and bind the ViewModel implmentation to the view (Page).
                 Bind(e.SourcePageType, (MetroView)e.Content);
             }
         }

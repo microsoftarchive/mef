@@ -11,6 +11,8 @@ namespace AppSettingsExtensionDemo.Extension
 {
     public class AppSettingsExportDescriptorProvider : ExportDescriptorProvider
     {
+        static readonly Type[] SupportedSettingTypes = new[] { typeof(string), typeof(int), typeof(double), typeof(DateTime), typeof(TimeSpan) };
+
         public override IEnumerable<ExportDescriptorPromise> GetExportDescriptors(CompositionContract contract, DependencyAccessor definitionAccessor)
         {
             string key;
@@ -20,6 +22,9 @@ namespace AppSettingsExtensionDemo.Extension
                 return NoExportDescriptors;
 
             if (!unwrapped.Equals(new CompositionContract(unwrapped.ContractType)))
+                return NoExportDescriptors;
+
+            if (!SupportedSettingTypes.Contains(unwrapped.ContractType))
                 return NoExportDescriptors;
 
             var value = ConfigurationManager.AppSettings.Get(key);

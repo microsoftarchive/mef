@@ -6,7 +6,11 @@ using System.Composition.Convention.UnitTests;
 using System.Reflection;
 using System.Linq;
 using System.Text;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.Convention
 {
@@ -23,7 +27,7 @@ namespace System.Composition.Convention
             var builder = new ConventionBuilder();
             builder.ForType<CFoo>().Export<IFoo>();
 
-            var exports = builder.GetDeclaredAttributes(typeof(CFoo), typeof(CFoo)).Where<Attribute>( e => e is ExportAttribute).Cast<ExportAttribute>();
+            var exports = builder.GetDeclaredAttributes(typeof(CFoo), typeof(CFoo).GetTypeInfo()).Where<Attribute>( e => e is ExportAttribute).Cast<ExportAttribute>();
             Assert.AreEqual(1, exports.Count());
             Assert.AreEqual(exports.First().ContractType, typeof(IFoo));
         }
@@ -34,7 +38,7 @@ namespace System.Composition.Convention
             var builder = new ConventionBuilder();
             builder.ForType(typeof(CFoo)).Export( (c) => c.AsContractType(typeof(IFoo)));
 
-            var exports = builder.GetDeclaredAttributes(typeof(CFoo), typeof(CFoo)).Where<Attribute>( e => e is ExportAttribute).Cast<ExportAttribute>();
+            var exports = builder.GetDeclaredAttributes(typeof(CFoo), typeof(CFoo).GetTypeInfo()).Where<Attribute>( e => e is ExportAttribute).Cast<ExportAttribute>();
             Assert.AreEqual(1, exports.Count());
             Assert.AreEqual(exports.First().ContractType, typeof(IFoo));
         }

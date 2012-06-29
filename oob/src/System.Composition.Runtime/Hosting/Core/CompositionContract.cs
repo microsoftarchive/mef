@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 using System;
 using System.Collections;
@@ -80,7 +80,7 @@ namespace System.Composition.Hosting.Core
             return contract != null && 
                 contract._contractType.Equals(_contractType) &&
                 (_contractName == null ? contract._contractName == null : _contractName.Equals(contract._contractName)) &&
-                (_metadataConstraints == null ? contract._metadataConstraints == null : ConstraintEqual(_metadataConstraints, contract._metadataConstraints));
+                ConstraintEqual(_metadataConstraints, contract._metadataConstraints);
         }
 
         /// <summary>
@@ -172,6 +172,12 @@ namespace System.Composition.Hosting.Core
 
         internal static bool ConstraintEqual(IDictionary<string, object> first, IDictionary<string, object> second)
         {
+            if (first == second)
+                return true;
+
+            if (first == null || second == null)
+                return false;
+
             if (first.Count != second.Count)
                 return false;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Composition;
-using System.Composition.Web.Mvc;
+using Microsoft.Composition.Demos.Web.Mvc;
 using System.Data;
 using System.Data.Common;
 using System.Data.Entity;

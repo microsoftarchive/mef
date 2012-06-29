@@ -11,6 +11,6 @@ namespace AppSettingsExtensionDemo.Parts
     public class AuthenticationProvider
     {
         [Export, Setting("username")]
-        public string Username { get { return "nblumhardt"; } }
+        public string Username { get { return "Nancy"; } }
     }
 }

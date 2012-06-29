@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 
 using System;
@@ -12,9 +12,12 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Internal;
 
 namespace System.Composition.Hosting.Providers.Metadata
 {
+    using System.Composition.Hosting.Properties;
+
     /// <summary>
     /// Creates components for contracts like:
     ///     Func&lt;IDictionary&lt;string,object&gt;,TMetadata&gt; "MetadataViewProvider"
@@ -114,8 +117,7 @@ namespace System.Composition.Hosting.Providers.Metadata
                     .Compile();
             }
 
-            var noConstructorsMessage = string.Format("The type '{0}' cannot be used as a metadata view as it does not have a suitable (parameterless or dictionary) constructor.", typeof(TMetadata).Name);
-            throw new CompositionFailedException(noConstructorsMessage);
+            throw ThrowHelper.CompositionException(string.Format(Resources.MetadataViewProvider_InvalidViewImplementation, typeof(TMetadata).Name));
         }
 
         static TValue GetMetadataValue<TValue>(IDictionary<string, object> metadata, string name, DefaultValueAttribute defaultValue)
@@ -128,8 +130,8 @@ namespace System.Composition.Hosting.Providers.Metadata
                 return (TValue)defaultValue.Value;
             
             // This could be significantly improved by describing the target metadata property.
-            var message = string.Format("Export metadata for '{0}' is missing and no default value was supplied.", name);
-            throw new CompositionFailedException(message);
+            var message = string.Format(Resources.MetadataViewProvider_MissingMetadata, name);
+            throw ThrowHelper.CompositionException(message);
         }
     }
 }

@@ -4,7 +4,11 @@ using System.Composition.Convention.UnitTests;
 using System.Linq;
 using System.Text;
 using System.Reflection;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.Convention
 {
@@ -58,7 +62,7 @@ namespace System.Composition.Convention
 
         private static IEnumerable<ExportAttribute> GetExportAttributes(ConventionBuilder builder, Type type)
         {
-            var list = builder.GetDeclaredAttributes(type, type);
+            var list = builder.GetDeclaredAttributes(type, type.GetTypeInfo());
             return list.Cast <ExportAttribute>();
         }
     }

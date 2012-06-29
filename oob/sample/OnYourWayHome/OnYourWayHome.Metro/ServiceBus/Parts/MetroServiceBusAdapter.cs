@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Composition;
 using System.Runtime.InteropServices.WindowsRuntime;
 using OnYourWayHome.ServiceBus;
 using OnYourWayHome.ServiceBus.Serialization;
@@ -6,14 +7,14 @@ using Windows.Security.Cryptography.Core;
 
 namespace OnYourWayHome.ServiceBus.Parts
 {
-    internal class MetroServiceBusAdapter : ServiceBusAdapter
+    internal class MetroServiceBusAdapter : IServiceBusAdapter
     {
-        public override IDataContractSerializer CreateJsonSerializer(Type type)
+        public IDataContractSerializer CreateJsonSerializer(Type type)
         {
             return new DataContractJsonSerializerAdapter(type);
         }
 
-        public override byte[] ComputeHmacSha256(byte[] secretKey, byte[] data)
+        public byte[] ComputeHmacSha256(byte[] secretKey, byte[] data)
         {
             const string HmacSha256AlgorithmName = "HMAC_SHA256";
 

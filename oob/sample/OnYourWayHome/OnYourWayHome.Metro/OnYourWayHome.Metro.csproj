@@ -13,8 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <SccAuxPath>SAK</SccAuxPath>
-    <PackageCertificateThumbprint>1E023C7079E9A8517C524C68BE74A739A9F59AA0</PackageCertificateThumbprint>
-    <PackageCertificateKeyFile>OnYourWayHome.Metro_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateThumbprint>36F368CBD9F78D3A96DF4276B217254F66C25997</PackageCertificateThumbprint>
+    <PackageCertificateKeyFile>..\..\..\Metro_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -196,7 +196,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="OnYourWayHome.Metro_TemporaryKey.pfx" />
+    <None Include="..\..\..\Metro_TemporaryKey.pfx">
+      <Link>Metro_TemporaryKey.pfx</Link>
+    </None>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

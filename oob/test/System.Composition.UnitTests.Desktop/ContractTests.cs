@@ -4,7 +4,11 @@ using System.Composition.Hosting.Core;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.UnitTests
 {
@@ -78,6 +82,14 @@ namespace System.Composition.UnitTests
             var mcd = new CompositionContract(typeof(AType), "inner", new Dictionary<string, object> { { "A", 1 } });
             var s = mcd.ToString();
             Assert.AreEqual("AType \"inner\" { A = 1 }", s);
+        }
+
+        [TestMethod]
+        public void AContractWithConstraintIsNotEqualToAContractWithoutConstraint()
+        {
+            var first = new CompositionContract(typeof(string), null, new Dictionary<string,object>{{ "A", 1 }});
+            var second = new CompositionContract(typeof(string));
+            Assert.IsFalse(first.Equals(second));
         }
     }
 }

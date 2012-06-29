@@ -4,7 +4,11 @@ using System.Composition.Convention;
 using System.Composition.Convention.UnitTests;
 using System.Linq;
 using System.Reflection;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.ComponentModel.Composition
 {
@@ -137,21 +141,21 @@ namespace System.ComponentModel.Composition
 
         private static ImportAttribute GetImportAttribute(ConventionBuilder builder)
         {
-            var list = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl).GetTypeInfo().GetRuntimeProperties().Where( (m) => m.Name == "IFooProperty").First());
+            var list = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl).GetRuntimeProperties().Where( (m) => m.Name == "IFooProperty").First());
             Assert.AreEqual(1, list.Length);
             return list.OfType<ImportAttribute>().FirstOrDefault();
         }
 
         private static ImportManyAttribute GetImportManyAttribute(ConventionBuilder builder)
         {
-            var list = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl).GetTypeInfo().GetRuntimeProperties().Where((m) => m.Name == "IFooProperty").First());
+            var list = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl).GetRuntimeProperties().Where((m) => m.Name == "IFooProperty").First());
             Assert.AreEqual(1, list.Length);
             return list.OfType<ImportManyAttribute>().FirstOrDefault();
         }
 
         private static ImportMetadataConstraintAttribute GetImportMetadataConstraintAttribute(ConventionBuilder builder)
         {
-            var list = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl).GetTypeInfo().GetRuntimeProperties().Where((m) => m.Name == "IFooProperty").First());
+            var list = builder.GetDeclaredAttributes(typeof(FooImpl), typeof(FooImpl).GetRuntimeProperties().Where((m) => m.Name == "IFooProperty").First());
             Assert.AreEqual(2, list.Length);
             return list.OfType<ImportMetadataConstraintAttribute>().FirstOrDefault();
         }

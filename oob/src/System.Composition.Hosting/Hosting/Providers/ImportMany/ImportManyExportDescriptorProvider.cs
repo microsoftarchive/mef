@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 
 using System.Reflection;
@@ -11,6 +11,8 @@ using System.Linq;
 
 namespace System.Composition.Hosting.Providers.ImportMany
 {
+    using System.Composition.Hosting.Properties;
+
     class ImportManyExportDescriptorProvider : ExportDescriptorProvider
     {
         static readonly MethodInfo GetImportManyDefinitionMethod = typeof(ImportManyExportDescriptorProvider).GetTypeInfo().GetDeclaredMethod("GetImportManyDescriptor");

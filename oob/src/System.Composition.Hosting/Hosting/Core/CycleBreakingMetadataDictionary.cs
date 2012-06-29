@@ -1,8 +1,9 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using Microsoft.Internal;
 
 namespace System.Composition.Hosting.Core
 {
@@ -20,7 +21,7 @@ namespace System.Composition.Hosting.Core
             get
             {
                 if (!_exportDescriptor.IsValueCreated)
-                    throw new NotImplementedException("Metadata value circularity not possible, use lazy initialization.");
+                    throw ThrowHelper.NotImplemented_MetadataCycles();
 
                 return _exportDescriptor.Value.Metadata;
             }

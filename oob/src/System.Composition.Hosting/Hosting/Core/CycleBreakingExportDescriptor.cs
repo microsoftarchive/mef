@@ -1,8 +1,9 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace System.Composition.Hosting.Core
 {
@@ -39,10 +40,9 @@ namespace System.Composition.Hosting.Core
 
         object Activate(LifetimeContext context, CompositionOperation operation)
         {
-            if (!_exportDescriptor.IsValueCreated)
-                throw new InvalidOperationException("Activation in progress before all descriptors fully initialized.");
+            Assumes.IsTrue(_exportDescriptor.IsValueCreated, "Activation in progress before all descriptors fully initialized.");
 
-            System.Diagnostics.Debug.WriteLine("[System.Composition] Activating via cycle-breaking proxy.");
+            Debug.WriteLine("[System.Composition] Activating via cycle-breaking proxy.");
             return _exportDescriptor.Value.Activator(context, operation);
         }
     }

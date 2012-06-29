@@ -1,9 +1,10 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 using System.Composition;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.Internal;
 
 namespace System.Composition.Hosting.Core
 {
@@ -30,8 +31,8 @@ namespace System.Composition.Hosting.Core
         /// <returns>The composed object graph.</returns>
         public static object Run(LifetimeContext outermostLifetimeContext, CompositeActivator compositionRootActivator)
         {
-            if (outermostLifetimeContext == null) throw new ArgumentNullException("outermostLifetimeContext");
-            if (compositionRootActivator == null) throw new ArgumentNullException("compositionRootActivator");
+            Requires.ArgumentNotNull(outermostLifetimeContext, "outermostLifetimeContext");
+            Requires.ArgumentNotNull(compositionRootActivator, "compositionRootActivator");
 
             using (var operation = new CompositionOperation())
             {
@@ -64,8 +65,7 @@ namespace System.Composition.Hosting.Core
         /// <param name="action">Action to run.</param>
         public void AddPostCompositionAction(Action action)
         {
-            if (action == null)
-                throw new ArgumentNullException("action");
+            Requires.ArgumentNotNull(action, "action");
 
             if (_postCompositionActions == null)
                 _postCompositionActions = new List<Action>();
@@ -75,14 +75,15 @@ namespace System.Composition.Hosting.Core
 
         internal void EnterSharingLock(object sharingLock)
         {
+            Assumes.NotNull(sharingLock, "Sharing lock is required");
+
             if (_sharingLock == null)
             {
                 _sharingLock = sharingLock;
                 Monitor.Enter(sharingLock);
             }
 
-            if (_sharingLock != sharingLock)
-                throw new InvalidOperationException("Sharing lock already taken in this operation.");
+            Assumes.IsTrue(_sharingLock == sharingLock, "Sharing lock already taken in this operation.");
         }
 
         void Complete()

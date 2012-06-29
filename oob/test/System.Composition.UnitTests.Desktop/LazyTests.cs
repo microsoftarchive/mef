@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.UnitTests
 {
@@ -30,7 +34,7 @@ namespace System.Composition.UnitTests
         [Export, ExportMetadata("Name", "Fred")]
         public class NamedFred { }
 
-        public interface INamed { string Name { get; } }
+        public class Named { public string Name { get; set; } }
 
         [TestMethod]
         public void ComposesLazily()
@@ -44,7 +48,7 @@ namespace System.Composition.UnitTests
         public void SupportsExportMetadata()
         {
             var cc = CreateContainer(typeof(NamedFred));
-            var fred = cc.GetExport<Lazy<NamedFred, INamed>>();
+            var fred = cc.GetExport<Lazy<NamedFred, Named>>();
             Assert.AreEqual("Fred", fred.Metadata.Name);
         }
 

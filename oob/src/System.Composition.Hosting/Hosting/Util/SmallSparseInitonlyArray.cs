@@ -1,6 +1,10 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
+
+using System.Composition.Hosting;
+
+using Microsoft.Internal;
 
 namespace System.Composition.Hosting.Util
 {
@@ -32,9 +36,8 @@ namespace System.Composition.Hosting.Util
                 _elements[elementIndex] = newElement;
                 return;
             }
-            
-            if (e.Index == index)
-                throw new Exception("Index already set.");
+
+            Assumes.IsTrue(e.Index != index, string.Format("An item with the key '{0}' has already been added.", index));
 
             for (int offset = 1; offset <= LocalOffsetMax; ++offset)
             {
@@ -46,8 +49,7 @@ namespace System.Composition.Hosting.Util
                     return;
                 }
 
-                if (e.Index == index)
-                    throw new Exception("Index already set.");
+                Assumes.IsTrue(e.Index != index, string.Format("An item with the key '{0}' has already been added.", index));
             }
 
             if (_overflow == null)

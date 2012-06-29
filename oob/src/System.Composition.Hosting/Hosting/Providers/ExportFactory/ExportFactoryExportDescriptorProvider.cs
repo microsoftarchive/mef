@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 
 using System.Linq;
@@ -11,6 +11,8 @@ using System.Composition.Hosting.Util;
 
 namespace System.Composition.Hosting.Providers.ExportFactory
 {
+    using System.Composition.Hosting.Properties;
+
     class ExportFactoryExportDescriptorProvider : ExportDescriptorProvider
     {
         static readonly MethodInfo GetExportFactoryDefinitionsMethod = typeof(ExportFactoryExportDescriptorProvider).GetTypeInfo().GetDeclaredMethod("GetExportFactoryDescriptors");

@@ -4,7 +4,11 @@ using System.Composition.Convention;
 using System.Composition.Convention.UnitTests;
 using System.Linq;
 using System.Reflection;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.Convention.UnitTests
 {
@@ -62,15 +66,15 @@ namespace System.Composition.Convention.UnitTests
             var fooImplWithConstructorsTypeInfo = typeof(FooImplWithConstructors).GetTypeInfo();
 
             // necessary as BuildConventionConstructorAttributes is only called for type level query for attributes
-            var constructor1 = fooImplWithConstructorsTypeInfo.GetConstructors().Where(c => c.GetParameters().Length == 0).Single();
-            var constructor2 = fooImplWithConstructorsTypeInfo.GetConstructors().Where(c => c.GetParameters().Length == 1).Single();
-            var constructor3 = fooImplWithConstructorsTypeInfo.GetConstructors().Where(c => c.GetParameters().Length == 2).Single();
+            var constructor1 = fooImplWithConstructorsTypeInfo.DeclaredConstructors.Where(c => c.GetParameters().Length == 0).Single();
+            var constructor2 = fooImplWithConstructorsTypeInfo.DeclaredConstructors.Where(c => c.GetParameters().Length == 1).Single();
+            var constructor3 = fooImplWithConstructorsTypeInfo.DeclaredConstructors.Where(c => c.GetParameters().Length == 2).Single();
 
-            Assert.AreEqual(0, builder.GetDeclaredAttributes(fooImplWithConstructorsTypeInfo, constructor1).Count());
-            Assert.AreEqual(0, builder.GetDeclaredAttributes(fooImplWithConstructorsTypeInfo, constructor2).Count());
+            Assert.AreEqual(0, builder.GetCustomAttributes(typeof(FooImplWithConstructors), constructor1).Count());
+            Assert.AreEqual(0, builder.GetCustomAttributes(typeof(FooImplWithConstructors), constructor2).Count());
 
             var ci = constructor3;
-            var attrs = builder.GetDeclaredAttributes(fooImplWithConstructorsTypeInfo, ci);
+            var attrs = builder.GetCustomAttributes(typeof(FooImplWithConstructors), ci);
             Assert.AreEqual(1, attrs.Count());
             Assert.AreEqual(typeof(ImportingConstructorAttribute), attrs.FirstOrDefault().GetType());
         }
@@ -89,17 +93,17 @@ namespace System.Composition.Convention.UnitTests
 
             var fooImplWithConstructors = typeof(FooImplWithConstructors).GetTypeInfo();
 
-            var constructor1 = fooImplWithConstructors.GetConstructors().Where(c => c.GetParameters().Length == 0).Single();
-            var constructor2 = fooImplWithConstructors.GetConstructors().Where(c => c.GetParameters().Length == 1).Single();
-            var constructor3 = fooImplWithConstructors.GetConstructors().Where(c => c.GetParameters().Length == 2).Single(); 
+            var constructor1 = fooImplWithConstructors.DeclaredConstructors.Where(c => c.GetParameters().Length == 0).Single();
+            var constructor2 = fooImplWithConstructors.DeclaredConstructors.Where(c => c.GetParameters().Length == 1).Single();
+            var constructor3 = fooImplWithConstructors.DeclaredConstructors.Where(c => c.GetParameters().Length == 2).Single(); 
 
 
             // necessary as BuildConventionConstructorAttributes is only called for type level query for attributes
-            Assert.AreEqual(0, builder.GetDeclaredAttributes(fooImplWithConstructors, constructor1).Count());
-            Assert.AreEqual(0, builder.GetDeclaredAttributes(fooImplWithConstructors, constructor3).Count());
+            Assert.AreEqual(0, builder.GetCustomAttributes(typeof(FooImplWithConstructors), constructor1).Count());
+            Assert.AreEqual(0, builder.GetCustomAttributes(typeof(FooImplWithConstructors), constructor3).Count());
             
             var ci = constructor2;
-            var attrs = builder.GetDeclaredAttributes(fooImplWithConstructors, ci);
+            var attrs = builder.GetCustomAttributes(typeof(FooImplWithConstructors), ci);
             Assert.AreEqual(1, attrs.Count());
             Assert.AreEqual(typeof(ImportingConstructorAttribute), attrs.FirstOrDefault().GetType());
         }
@@ -118,18 +122,18 @@ namespace System.Composition.Convention.UnitTests
 
             var fooImplWithConstructors = typeof(FooImplWithConstructors).GetTypeInfo();
 
-            var constructor1 = fooImplWithConstructors.GetConstructors().Where(c => c.GetParameters().Length == 0).Single();
-            var constructor2 = fooImplWithConstructors.GetConstructors().Where(c => c.GetParameters().Length == 1).Single();
-            var constructor3 = fooImplWithConstructors.GetConstructors().Where(c => c.GetParameters().Length == 2).Single(); 
+            var constructor1 = fooImplWithConstructors.DeclaredConstructors.Where(c => c.GetParameters().Length == 0).Single();
+            var constructor2 = fooImplWithConstructors.DeclaredConstructors.Where(c => c.GetParameters().Length == 1).Single();
+            var constructor3 = fooImplWithConstructors.DeclaredConstructors.Where(c => c.GetParameters().Length == 2).Single(); 
             
             // necessary as BuildConventionConstructorAttributes is only called for type level query for attributes
-            Assert.AreEqual(0, constructor1.GetCustomAttributes(false).Length);
-            Assert.AreEqual(0, constructor3.GetCustomAttributes(false).Length);
-            
+            Assert.AreEqual(0, builder.GetCustomAttributes(typeof(FooImplWithConstructors), constructor1).Count());
+            Assert.AreEqual(0, builder.GetCustomAttributes(typeof(FooImplWithConstructors), constructor3).Count());
+
             var ci = constructor2;
-            var attrs = builder.GetDeclaredAttributes(fooImplWithConstructors, ci);
-            Assert.AreEqual(1, attrs.Length);
-            Assert.AreEqual(typeof(ImportingConstructorAttribute), attrs[0].GetType());
+            var attrs = builder.GetCustomAttributes(typeof(FooImplWithConstructors), ci);
+            Assert.AreEqual(1, attrs.Count());
+            Assert.AreEqual(typeof(ImportingConstructorAttribute), attrs.FirstOrDefault().GetType());
         }
 
         interface IGenericInterface<T> { }

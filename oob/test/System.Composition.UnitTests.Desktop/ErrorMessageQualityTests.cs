@@ -7,7 +7,11 @@ using System.Composition.UnitTests.Util;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.UnitTests
 {
@@ -78,7 +82,7 @@ namespace System.Composition.UnitTests
             var x = AssertX.Throws<CompositionFailedException>(() => cc.GetExport<UserOfUnregistered>());
             Assert.AreEqual("No export was found for the contract 'Unregistered'" + Environment.NewLine +
                             " -> required by import 'Unregistered' of part 'UserOfUnregistered'" + Environment.NewLine +
-                            " -> required by initial request for contract 'UserOfUnregistered'.", x.Message);
+                            " -> required by initial request for contract 'UserOfUnregistered'", x.Message);
         }
 
         [TestMethod]
@@ -86,12 +90,12 @@ namespace System.Composition.UnitTests
         {
             var cc = CreateContainer(typeof(CycleA), typeof(CycleB), typeof(CycleC));
             var x = AssertX.Throws<CompositionFailedException>(() => cc.GetExport<CycleA>());
-            Assert.AreEqual("Importing part 'CycleA' creates an unsupported cycle" + Environment.NewLine +
+            Assert.AreEqual("Detected an unsupported cycle for part 'CycleA'." +
+                            " To construct a valid cycle, at least one part in the cycle must be shared, and at least one import in the cycle must be non-prerequisite (e.g. a property)." + Environment.NewLine +
                             " -> required by import 'A' of part 'CycleC'" + Environment.NewLine +
                             " -> required by import 'C' of part 'CycleB'" + Environment.NewLine +
                             " -> required by import 'B' of part 'CycleA'" + Environment.NewLine +
-                            " -> required by initial request for contract 'CycleA'." + Environment.NewLine +
-                            "To construct a cycle, at least one part in the cycle must be shared, and at least one import in the cycle must be non-prerequisite (e.g. a property).", x.Message);
+                            " -> required by initial request for contract 'CycleA'", x.Message);
         }
 
         [TestMethod]
@@ -99,9 +103,9 @@ namespace System.Composition.UnitTests
         {
             var cc = CreateContainer(typeof(ShouldBeOne), typeof(ButThereIsAnother), typeof(RequiresOnlyOne));
             var x = AssertX.Throws<CompositionFailedException>(() => cc.GetExport<RequiresOnlyOne>());
-            Assert.AreEqual("Only one implementation of the contract 'ShouldBeOne' is allowed, but parts 'ButThereIsAnother' and 'ShouldBeOne' export it" + Environment.NewLine +
+            Assert.AreEqual("Only one export for the contract 'ShouldBeOne' is allowed, but the following parts: 'ButThereIsAnother', 'ShouldBeOne' export it." + Environment.NewLine +
                             " -> required by import 'One' of part 'RequiresOnlyOne'" + Environment.NewLine +
-                            " -> required by initial request for contract 'RequiresOnlyOne'.", x.Message);
+                            " -> required by initial request for contract 'RequiresOnlyOne'", x.Message);
         }
     }
 }

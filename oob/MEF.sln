@@ -4,10 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{ECDDDA73-8594-4ADA-99EF-D17E7DF8D6F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{58BA3220-3DB0-4F9A-ADE0-8A845DD91416}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibrary", "test\Scenarios\TestLibrary\TestLibrary.csproj", "{DA6841A5-0344-4CC7-98B0-89CBEE18DEE3}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenarios", "scenarios", "{4244EB33-FA24-41EA-801C-BA3C0940CA21}"
+	ProjectSection(SolutionItems) = preProject
+		test\UnitTest.targets = test\UnitTest.targets
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{B09E7B8B-30C3-4297-A226-DA5E6EB61BEC}"
 EndProject
@@ -33,11 +32,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.Attribut
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.TypedParts", "src\System.Composition.TypedParts\System.Composition.TypedParts.csproj", "{B4B5E15C-E6B9-48EA-94C2-F067484D4D3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.Web.Mvc", "src\System.Composition.Web.Mvc\System.Composition.Web.Mvc.csproj", "{014116F2-DF99-4700-9267-294407BA3F0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Composition.Demos.Web.Mvc", "demo\Microsoft.Composition.Demos.Web.Mvc\Microsoft.Composition.Demos.Web.Mvc.csproj", "{014116F2-DF99-4700-9267-294407BA3F0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.UnitTests.Desktop", "test\System.Composition.UnitTests.Desktop\System.Composition.UnitTests.Desktop.csproj", "{4852A19F-C05C-478D-BFA0-59FD03DE0E3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.Web.Mvc.UnitTests.Desktop", "test\System.Composition.Web.Mvc.UnitTests.Desktop\System.Composition.Web.Mvc.UnitTests.Desktop.csproj", "{DA1A441B-292F-4D85-BD67-15A1EC7DCF52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Composition.Demos.Web.Mvc.UnitTests.Desktop", "test\Microsoft.Composition.Demos.Web.Mvc.UnitTests.Desktop\Microsoft.Composition.Demos.Web.Mvc.UnitTests.Desktop.csproj", "{DA1A441B-292F-4D85-BD67-15A1EC7DCF52}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Composition.Samples.FabrikamBooks", "sample\Microsoft.Composition.Samples.FabrikamBooks\Microsoft.Composition.Samples.FabrikamBooks.csproj", "{3D92BC4C-DD72-4CE2-BEA6-C8B1C555A0A6}"
 EndProject
@@ -57,15 +56,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Composition.Demos
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Composition.ThroughputHarness", "test\Microsoft.Composition.ThroughputHarness\Microsoft.Composition.ThroughputHarness.csproj", "{E3E3DA53-B8AC-46B6-8AAB-EBF751A2D0C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.ComponentModelAttributeSupport", "src\System.Composition.ComponentModelAttributeSupport\System.Composition.ComponentModelAttributeSupport.csproj", "{F9D8DE1A-FC3E-4855-B9E6-25BA1A9319DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Composition.Demos.ComponentModelAttributeSupport", "demo\Microsoft.Composition.Demos.ComponentModelAttributeSupport\Microsoft.Composition.Demos.ComponentModelAttributeSupport.csproj", "{F9D8DE1A-FC3E-4855-B9E6-25BA1A9319DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.ComponentModelAttributeSupport.UnitTests.Desktop", "test\System.Composition.ComponentModelAttributeSupport.UnitTests.Desktop\System.Composition.ComponentModelAttributeSupport.UnitTests.Desktop.csproj", "{6467F0E3-568F-4EE8-B549-F80F3E1B1512}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Composition.Demos.ComponentModelAttributeSupport.UnitTests.Desktop", "test\Microsoft.Composition.Demos.ComponentModelAttributeSupport.UnitTests.Desktop\Microsoft.Composition.Demos.ComponentModelAttributeSupport.UnitTests.Desktop.csproj", "{6467F0E3-568F-4EE8-B549-F80F3E1B1512}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.Convention.UnitTests.Desktop", "test\System.Composition.Convention.UnitTests.Desktop\System.Composition.Convention.UnitTests.Desktop.csproj", "{853BB14F-8A5B-42B4-A053-21DE1AEBB335}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.Web.Http", "src\System.Composition.Web.Http\System.Composition.Web.Http.csproj", "{D9FA15A3-ED2D-4A75-9D11-06920D85282F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Composition.Demos.Web.Http", "demo\Microsoft.Composition.Demos.Web.Http\Microsoft.Composition.Demos.Web.Http.csproj", "{D9FA15A3-ED2D-4A75-9D11-06920D85282F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.Web.Http.UnitTests.Desktop", "test\System.Composition.Web.Http.UnitTests.Desktop\System.Composition.Web.Http.UnitTests.Desktop.csproj", "{1523A82D-DA92-452B-947F-8DB7F0FA2016}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Composition.Demos.Web.Http.UnitTests.Desktop", "test\Microsoft.Composition.Demos.Web.Http.UnitTests.Desktop\Microsoft.Composition.Demos.Web.Http.UnitTests.Desktop.csproj", "{1523A82D-DA92-452B-947F-8DB7F0FA2016}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Composition.Demos.ExtendedCollectionImports", "demo\Microsoft.Composition.Demos.ExtendedCollectionImports\Microsoft.Composition.Demos.ExtendedCollectionImports.csproj", "{44C7E52C-3873-4C64-875C-8A23A8376D60}"
 EndProject
@@ -80,6 +79,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnYourWayHome.Metro", "sample\OnYourWayHome\OnYourWayHome.Metro\OnYourWayHome.Metro.csproj", "{44ABD490-3B28-46C1-B71D-A84AEEB87ABE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnYourWayHome.ServiceBus", "sample\OnYourWayHome\OnYourWayHome.ServiceBus\OnYourWayHome.ServiceBus.csproj", "{6A285399-2326-4CDD-9156-1576F356D4CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.UnitTests.MetroStyle", "test\System.Composition.UnitTests.MetroStyle\System.Composition.UnitTests.MetroStyle.csproj", "{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Composition.Convention.UnitTests.MetroStyle", "test\System.Composition.Convention.UnitTests.MetroStyle\System.Composition.Convention.UnitTests.MetroStyle.csproj", "{1720CF67-7223-48D7-B1B0-BAD443825C95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibrary", "test\scenarios\TestLibrary\TestLibrary.csproj", "{DA6841A5-0344-4CC7-98B0-89CBEE18DEE3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scenarios", "scenarios", "{094EC8AD-44E3-4A55-9A35-73AFAE39BACA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +140,18 @@ Global
 		{1523A82D-DA92-452B-947F-8DB7F0FA2016}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1523A82D-DA92-452B-947F-8DB7F0FA2016}.Release|x64.ActiveCfg = Release|Any CPU
 		{1523A82D-DA92-452B-947F-8DB7F0FA2016}.Release|x86.ActiveCfg = Release|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Release|ARM.ActiveCfg = Release|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Release|x64.ActiveCfg = Release|Any CPU
+		{1720CF67-7223-48D7-B1B0-BAD443825C95}.Release|x86.ActiveCfg = Release|Any CPU
 		{2711DFD2-8541-4628-BC53-EB784A14CDCF}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{2711DFD2-8541-4628-BC53-EB784A14CDCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2711DFD2-8541-4628-BC53-EB784A14CDCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -357,6 +376,18 @@ Global
 		{E6592FAD-10B5-4B56-9287-D72DD136992F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6592FAD-10B5-4B56-9287-D72DD136992F}.Release|x64.ActiveCfg = Release|Any CPU
 		{E6592FAD-10B5-4B56-9287-D72DD136992F}.Release|x86.ActiveCfg = Release|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Release|ARM.ActiveCfg = Release|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Release|x64.ActiveCfg = Release|Any CPU
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489}.Release|x86.ActiveCfg = Release|Any CPU
 		{F6FFF814-9212-4C5F-A62B-0559D97F6696}.Debug|ARM.ActiveCfg = Debug|Any CPU
 		{F6FFF814-9212-4C5F-A62B-0559D97F6696}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F6FFF814-9212-4C5F-A62B-0559D97F6696}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -392,14 +423,15 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{014116F2-DF99-4700-9267-294407BA3F0C} = {ECDDDA73-8594-4ADA-99EF-D17E7DF8D6F6}
+		{014116F2-DF99-4700-9267-294407BA3F0C} = {2CEDF191-EA13-486E-A33D-1540C913DAC8}
+		{094EC8AD-44E3-4A55-9A35-73AFAE39BACA} = {58BA3220-3DB0-4F9A-ADE0-8A845DD91416}
 		{0E9B451B-A5A1-4466-AB06-C4721B7A1F44} = {2CEDF191-EA13-486E-A33D-1540C913DAC8}
 		{10D99902-CF43-40DF-A035-52002C2551C7} = {2CEDF191-EA13-486E-A33D-1540C913DAC8}
 		{1523A82D-DA92-452B-947F-8DB7F0FA2016} = {58BA3220-3DB0-4F9A-ADE0-8A845DD91416}
+		{1720CF67-7223-48D7-B1B0-BAD443825C95} = {58BA3220-3DB0-4F9A-ADE0-8A845DD91416}
 		{2711DFD2-8541-4628-BC53-EB784A14CDCF} = {ECDDDA73-8594-4ADA-99EF-D17E7DF8D6F6}
 		{2B8FECC6-34A1-48FE-BA75-99572D2D6DB2} = {ECDDDA73-8594-4ADA-99EF-D17E7DF8D6F6}
 		{3D92BC4C-DD72-4CE2-BEA6-C8B1C555A0A6} = {B09E7B8B-30C3-4297-A226-DA5E6EB61BEC}
-		{4244EB33-FA24-41EA-801C-BA3C0940CA21} = {58BA3220-3DB0-4F9A-ADE0-8A845DD91416}
 		{44ABD490-3B28-46C1-B71D-A84AEEB87ABE} = {5413037D-8EE4-4B79-B87D-BCB112C28CF0}
 		{44C7E52C-3873-4C64-875C-8A23A8376D60} = {2CEDF191-EA13-486E-A33D-1540C913DAC8}
 		{4852A19F-C05C-478D-BFA0-59FD03DE0E3F} = {58BA3220-3DB0-4F9A-ADE0-8A845DD91416}
@@ -413,14 +445,15 @@ Global
 		{B4B5E15C-E6B9-48EA-94C2-F067484D4D3E} = {ECDDDA73-8594-4ADA-99EF-D17E7DF8D6F6}
 		{C6257381-C624-494A-A9D9-5586E60856EA} = {ECDDDA73-8594-4ADA-99EF-D17E7DF8D6F6}
 		{D4DD4A06-921E-46F0-BF96-E07998313B35} = {2CEDF191-EA13-486E-A33D-1540C913DAC8}
-		{D9FA15A3-ED2D-4A75-9D11-06920D85282F} = {ECDDDA73-8594-4ADA-99EF-D17E7DF8D6F6}
+		{D9FA15A3-ED2D-4A75-9D11-06920D85282F} = {2CEDF191-EA13-486E-A33D-1540C913DAC8}
 		{DA1A441B-292F-4D85-BD67-15A1EC7DCF52} = {58BA3220-3DB0-4F9A-ADE0-8A845DD91416}
-		{DA6841A5-0344-4CC7-98B0-89CBEE18DEE3} = {4244EB33-FA24-41EA-801C-BA3C0940CA21}
+		{DA6841A5-0344-4CC7-98B0-89CBEE18DEE3} = {094EC8AD-44E3-4A55-9A35-73AFAE39BACA}
 		{DAC1F8E2-B76A-4247-9D97-E207B82479F5} = {2CEDF191-EA13-486E-A33D-1540C913DAC8}
 		{E3E3DA53-B8AC-46B6-8AAB-EBF751A2D0C3} = {58BA3220-3DB0-4F9A-ADE0-8A845DD91416}
 		{E6592FAD-10B5-4B56-9287-D72DD136992F} = {ECDDDA73-8594-4ADA-99EF-D17E7DF8D6F6}
+		{E8FFC9EB-93BA-4C3F-84F3-9FCE31656489} = {58BA3220-3DB0-4F9A-ADE0-8A845DD91416}
 		{F6FFF814-9212-4C5F-A62B-0559D97F6696} = {2CEDF191-EA13-486E-A33D-1540C913DAC8}
-		{F9D8DE1A-FC3E-4855-B9E6-25BA1A9319DD} = {ECDDDA73-8594-4ADA-99EF-D17E7DF8D6F6}
+		{F9D8DE1A-FC3E-4855-B9E6-25BA1A9319DD} = {2CEDF191-EA13-486E-A33D-1540C913DAC8}
 		{FBBFE1BF-DA67-42C3-B24D-B25972980BC4} = {2CEDF191-EA13-486E-A33D-1540C913DAC8}
 	EndGlobalSection
 EndGlobal

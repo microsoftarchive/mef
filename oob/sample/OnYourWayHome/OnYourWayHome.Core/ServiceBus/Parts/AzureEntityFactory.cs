@@ -8,7 +8,7 @@ namespace OnYourWayHome.ServiceBus.Parts
     // Creates Azure entities
     public class AzureEntityFactory : IAzureEntityFactory
     {
-        public AzureEntityFactory(ServiceBusAdapter adapter)
+        public AzureEntityFactory(IServiceBusAdapter adapter)
         {
             Requires.NotNull(adapter, "adapter");
 

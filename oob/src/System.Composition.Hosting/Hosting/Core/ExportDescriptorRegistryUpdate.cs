@@ -1,14 +1,17 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
 using System.Composition.Runtime;
 using System.Linq;
 using System.Text;
+using Microsoft.Internal;
 
 namespace System.Composition.Hosting.Core
 {
+    using System.Composition.Hosting.Properties;
+
     class ExportDescriptorRegistryUpdate : DependencyAccessor
     {
         readonly IDictionary<CompositionContract, ExportDescriptor[]> _partDefinitions;
@@ -60,9 +63,8 @@ namespace System.Composition.Hosting.Core
                 dependency.DescribeError(message);
                 message.AppendLine();
                 message.Append(DescribeCompositionStack(dependency, checking));
-                message.Append(".");
 
-                throw new CompositionFailedException(message.ToString());
+                throw ThrowHelper.CompositionException(message.ToString());
             }
 
             if (@checked.Contains(dependency.Target))
@@ -73,7 +75,6 @@ namespace System.Composition.Hosting.Core
             checking.Push(dependency);
             foreach (var dep in dependency.Target.Dependencies)
                 CheckDependency(dep, @checked, checking);
-
             checking.Pop();
         }
 
@@ -95,12 +96,10 @@ namespace System.Composition.Hosting.Core
                     if (step.Target.Equals(dependency.Target))
                     {
                         var message = new StringBuilder();
-                        message.AppendFormat("Importing part '{0}' creates an unsupported cycle{1}", dependency.Target.Origin, Environment.NewLine);                        
+                        message.AppendFormat(Resources.ExportDescriptor_UnsupportedCycle, dependency.Target.Origin);
+                        message.AppendLine();
                         message.Append(DescribeCompositionStack(dependency, checking));
-                        message.AppendLine(".");
-                        message.Append("To construct a cycle, at least one part in the cycle must be shared, and at least one import in the cycle must be non-prerequisite (e.g. a property).");
-
-                        throw new CompositionFailedException(message.ToString());
+                        throw ThrowHelper.CompositionException(message.ToString());
                     }
 
                     if (!step.IsPrerequisite)
@@ -111,40 +110,28 @@ namespace System.Composition.Hosting.Core
             CheckTarget(dependency, @checked, checking);
         }
 
-        StringBuilder DescribeCompositionStack(CompositionDependency top, Stack<CompositionDependency> stack)
-        {
-            var copy = new Stack<CompositionDependency>(stack.Reverse());
-            copy.Push(top);
-            return DescribeCompositionStack(copy);
-        }
-
-        StringBuilder DescribeCompositionStack(Stack<CompositionDependency> stack)
+        StringBuilder DescribeCompositionStack(CompositionDependency import, IEnumerable<CompositionDependency> dependencies)
         {
             var result = new StringBuilder();
-            if (stack.Count == 0)
-                return result;
-
-            CompositionDependency import = null;
-            foreach (var step in stack)
+            if (dependencies.FirstOrDefault() == null)
             {
-                if (import == null)
-                {
-                    import = step;
-                    continue;
-                }
+                return result;
+            }
 
-                result.AppendFormat(" -> required by import '{0}' of part '{1}'{2}", import.Site, step.Target.Origin, Environment.NewLine);
+            foreach (var step in dependencies)
+            {
+                result.AppendFormat(Resources.ExportDescriptor_DependencyErrorLine, import.Site, step.Target.Origin);
+                result.AppendLine();
                 import = step;
             }
 
-            result.AppendFormat(" -> required by initial request for contract '{0}'", import.Contract);
+            result.AppendFormat(Resources.ExportDescriptor_DependencyErrorContract, import.Contract);
             return result;
         }
 
         protected override IEnumerable<ExportDescriptorPromise> GetPromises(CompositionContract contract)
         {
-            if (_updateFinished)
-                throw new InvalidOperationException("Update is finished - dependencies should have been requested earlier.");
+            Assumes.IsTrue(!_updateFinished, "Update is finished - dependencies should have been requested earlier.");
 
             ExportDescriptor[] definitions;
             if (_partDefinitions.TryGetValue(contract, out definitions))

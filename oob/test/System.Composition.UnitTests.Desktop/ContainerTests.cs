@@ -6,9 +6,11 @@ using System.Composition.Hosting.Providers;
 using System.Composition.Convention;
 using System.Reflection;
 
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TestLibrary;
-using System.Composition.ComponentModelAttributeSupport;
+#endif
 
 namespace System.Composition.UnitTests
 {
@@ -18,7 +20,6 @@ namespace System.Composition.UnitTests
         {
             return new ContainerConfiguration()
                 .WithParts(types)
-                .WithProvider(new ComponentModelMetadataViewProvider())
                 .CreateContainer();
         }
 
@@ -27,7 +28,6 @@ namespace System.Composition.UnitTests
             return new ContainerConfiguration()
                 .WithParts(types)
                 .WithDefaultConventions(rb)
-                .WithProvider(new ComponentModelMetadataViewProvider())
                 .CreateContainer();
         }
     }

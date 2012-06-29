@@ -4,20 +4,19 @@ using System.Composition;
 using System.Linq;
 using System.Text;
 using OnYourWayHome.ApplicationModel;
-using OnYourWayHome.ApplicationModel.Composition;
 
 namespace OnYourWayHome.ApplicationModel.Presentation.Navigation.Parts
 {
     public abstract class NavigationService<TViewId> : INavigationService
     {
         private readonly Dictionary<Type, TViewId> _map = new Dictionary<Type, TViewId>();
-        private readonly CompositionContext _compositionContext;
+        private readonly ExportFactory<CompositionContext> _contextFactory;
 
-        protected NavigationService(CompositionContext compositionContext)
+        protected NavigationService(ExportFactory<CompositionContext> contextFactory)
         {
-            Requires.NotNull(compositionContext, "compositionContext");
+            Requires.NotNull(contextFactory, "compositionContext");
 
-            _compositionContext = compositionContext;
+            _contextFactory = contextFactory;
         }
 
         public event EventHandler CanGoBackChanged;
@@ -55,8 +54,10 @@ namespace OnYourWayHome.ApplicationModel.Presentation.Navigation.Parts
         protected void Bind(TViewId id, IView view)
         {
             Type viewModelType = FindViewModelType(id);
-            NavigatableViewModel viewModel = (NavigatableViewModel)_compositionContext.GetExport(viewModelType);
+            var viewModelContext = _contextFactory.CreateExport();    
+            NavigatableViewModel viewModel = (NavigatableViewModel)viewModelContext.Value.GetExport(viewModelType);            
             view.Bind(viewModel);
+            // Note: we do not dispose the viewModelContext because we do not want to dispose the parts it created
         }
 
         protected abstract void NavigateTo(TViewId id);

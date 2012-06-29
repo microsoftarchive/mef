@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// Copyright © 2012 Microsoft Corporation.  All rights reserved.
+// Copyright © Microsoft Corporation.  All rights reserved.
 // -----------------------------------------------------------------------
 
 using System;
@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Composition.Runtime;
 using System.Linq;
+using Microsoft.Internal;
 
 namespace System.Composition.Hosting.Core
 {
@@ -46,8 +47,8 @@ namespace System.Composition.Hosting.Core
             _contract = contract;
             _origin = origin;
             _isShared = isShared;
-            _dependencies = new Lazy<ReadOnlyCollection<CompositionDependency>>(() => new ReadOnlyCollection<CompositionDependency>(dependencies().ToArray()));
-            _descriptor = new Lazy<ExportDescriptor>(() => getDescriptor(_dependencies.Value));
+            _dependencies = new Lazy<ReadOnlyCollection<CompositionDependency>>(() => new ReadOnlyCollection<CompositionDependency>(dependencies().ToList()), false);
+            _descriptor = new Lazy<ExportDescriptor>( () => getDescriptor(_dependencies.Value), false );
         }
 
         /// <summary>
@@ -82,10 +83,16 @@ namespace System.Composition.Hosting.Core
                 return new CycleBreakingExportDescriptor(_descriptor);
 
             _creating = true;
-            if (_descriptor.Value == null) throw new InvalidOperationException("Export descriptor fulfillment function returned null.");
-            _creating = false;
-
-            return _descriptor.Value;
+            try
+            {
+                var reply = _descriptor.Value;
+                Assumes.IsTrue(reply != null, "Export descriptor fulfillment function returned null.");
+                return reply;
+            }
+            finally
+            {
+                _creating = false;
+            }
         }
 
         /// <summary>
@@ -94,7 +101,7 @@ namespace System.Composition.Hosting.Core
         /// <returns>A description of the promise.</returns>
         public override string ToString()
         {
-            return string.Format("{0} supplied by {1}", Contract, Origin);
+            return string.Format(Properties.Resources.ExportDescriptor_ToStringFormat, Contract, Origin);
         }
     }
 }

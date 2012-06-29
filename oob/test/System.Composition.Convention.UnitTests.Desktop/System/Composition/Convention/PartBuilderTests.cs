@@ -4,7 +4,11 @@ using System.Composition.Convention;
 using System.Linq;
 using System.Reflection;
 using System.Composition.Convention.UnitTests;
+#if NETFX_CORE
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+#else
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+#endif
 
 namespace System.Composition.Convention
 {
@@ -472,7 +476,7 @@ namespace System.Composition.Convention
         public void InsideTheLambdaCallGetCustomAttributesShouldSucceed()
         {
             var builder = new ConventionBuilder();
-            builder.ForTypesMatching((t) => !t.IsDefined(typeof(MyDoNotIncludeAttribute), false)).Export();
+            builder.ForTypesMatching((t) => !t.GetTypeInfo().IsDefined(typeof(MyDoNotIncludeAttribute), false)).Export();
             var container = new ContainerConfiguration()
                 .WithPart<MyNotToBeIncludedClass>(builder)
                 .WithPart<MyToBeIncludedClass>(builder)
@@ -589,7 +593,7 @@ namespace System.Composition.Convention
         {
             if (string.IsNullOrEmpty(member))
             {
-                var list = builder.GetDeclaredAttributes(null, type);
+                var list = builder.GetDeclaredAttributes(null, type.GetTypeInfo());
                 return list;
             }
             else
