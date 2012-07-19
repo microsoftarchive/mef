@@ -30,25 +30,20 @@ namespace System.Composition.Hosting.Providers.Lazy
 
         static ExportDescriptorPromise[] GetLazyDefinitions<TValue, TMetadata>(CompositionContract lazyContract, DependencyAccessor definitionAccessor)
         {
-            var providerDependency = definitionAccessor.ResolveRequiredDependency(
-                "metadata",
-                new CompositionContract(typeof(Func<IDictionary<string, object>, TMetadata>), MetadataViewProviderExportDescriptorProvider.MetadataViewProviderContractName),
-                true);
+            var metadataProvider = MetadataViewProvider.GetMetadataViewProvider<TMetadata>();
 
             return definitionAccessor.ResolveDependencies("value", lazyContract.ChangeType(typeof(TValue)), false)
                 .Select(d => new ExportDescriptorPromise(
                     lazyContract,
                     Formatters.Format(typeof(Lazy<TValue, TMetadata>)),
                     false,
-                    () => new[] { d, providerDependency },
+                    () => new[] { d },
                     _ =>
                     {
-                        var provider = providerDependency.Target.GetDescriptor().Activator;
                         var dsc = d.Target.GetDescriptor();
                         var da = dsc.Activator;
                         return ExportDescriptor.Create((c, o) => {
-                            var providerVal = (Func<IDictionary<string, object>, TMetadata>)provider(c, o);
-                            return new Lazy<TValue, TMetadata>(() => (TValue)CompositionOperation.Run(c, da), providerVal(dsc.Metadata));
+                            return new Lazy<TValue, TMetadata>(() => (TValue)CompositionOperation.Run(c, da), metadataProvider(dsc.Metadata));
                         }, dsc.Metadata);
                     }))
                 .ToArray();

@@ -16,63 +16,20 @@ using Microsoft.Internal;
 
 namespace System.Composition.Hosting.Providers.Metadata
 {
-    using System.Composition.Hosting.Properties;
-
-    /// <summary>
-    /// Creates components for contracts like:
-    ///     Func&lt;IDictionary&lt;string,object&gt;,TMetadata&gt; "MetadataViewProvider"
-    /// Where TMetadata is a concrete class with a parameterless or dictionary constructor.
-    /// </summary>
-    class MetadataViewProviderExportDescriptorProvider : ExportDescriptorProvider
+    static class MetadataViewProvider
     {
-        public const string MetadataViewProviderContractName = "MetadataViewProvider";
-        static readonly MethodInfo GetMetadataViewProviderMethod = typeof(MetadataViewProviderExportDescriptorProvider).GetTypeInfo().GetDeclaredMethod("GetMetadataViewProvider");
-        static readonly MethodInfo GetMetadataValueMethod = typeof(MetadataViewProviderExportDescriptorProvider).GetTypeInfo().GetDeclaredMethod("GetMetadataValue");
+        static readonly MethodInfo GetMetadataValueMethod = typeof(MetadataViewProvider).GetTypeInfo().GetDeclaredMethod("GetMetadataValue");
 
-        public override IEnumerable<ExportDescriptorPromise> GetExportDescriptors(
-            CompositionContract contract,
-            DependencyAccessor descriptorAccessor)
+        // While not called through the composition pipeline, we use the dependency mechanism to surface errors
+        // with appropriate context information.
+        public static Func<IDictionary<string,object>, TMetadata> GetMetadataViewProvider<TMetadata>()
         {
-            if (contract.ContractName != MetadataViewProviderContractName ||
-                !contract.ContractType.IsConstructedGenericType ||
-                contract.ContractType.GetGenericTypeDefinition() != typeof(Func<,>) ||
-                contract.MetadataConstraints != null)
-                return NoExportDescriptors;
+            if (typeof(TMetadata) == typeof(IDictionary<string, object>))
+                return m => (TMetadata)m;
 
-            var providerArgs = contract.ContractType.GenericTypeArguments;
-            var argType = providerArgs[0];
-            var viewType = providerArgs[1];
-            if (argType != typeof(IDictionary<string, object>))
-                return NoExportDescriptors;
+            if (!typeof(TMetadata).GetTypeInfo().IsClass)
+                throw new CompositionFailedException(string.Format(Properties.Resources.MetadataViewProvider_InvalidViewImplementation, typeof(TMetadata).Name));
 
-            if (viewType == typeof(IDictionary<string, object>))
-            {
-                Func<IDictionary<string,object>, IDictionary<string,object>> rawProvider = d => d;
-                return new[] { new ExportDescriptorPromise(
-                    contract,
-                    "Metadata View Provider",
-                    true,
-                    NoDependencies,
-                    _ => ExportDescriptor.Create((c, o) => rawProvider, NoMetadata)) };
-            }
-
-            if (viewType.GetTypeInfo().IsAbstract)
-                return NoExportDescriptors;
-
-            var getViewMethod = GetMetadataViewProviderMethod.MakeGenericMethod(viewType);
-            var gvm = getViewMethod.CreateStaticDelegate<Func<object>>();
-            var viewProvider = gvm();
-
-            return new[] { new ExportDescriptorPromise(
-                contract,
-                "Metadata View Provider",
-                true,
-                NoDependencies,
-                _ => ExportDescriptor.Create((c, o) => viewProvider, NoMetadata)) };
-        }
-
-        static Func<IDictionary<string, object>, TMetadata> GetMetadataViewProvider<TMetadata>()
-        {
             var ti = typeof(TMetadata).GetTypeInfo();
             var dictionaryConstructor = ti.DeclaredConstructors.SingleOrDefault(ci =>
             {
@@ -82,7 +39,7 @@ namespace System.Composition.Hosting.Providers.Metadata
 
             if (dictionaryConstructor != null)
             {
-                var providerArg = Expression.Parameter(typeof(IDictionary<string,object>), "metadata");
+                var providerArg = Expression.Parameter(typeof(IDictionary<string, object>), "metadata");
                 return Expression.Lambda<Func<IDictionary<string, object>, TMetadata>>(
                         Expression.New(dictionaryConstructor, providerArg),
                         providerArg)
@@ -99,7 +56,9 @@ namespace System.Composition.Hosting.Providers.Metadata
                 blockExprs.Add(Expression.Assign(resultVar, Expression.New(parameterlessConstructor)));
 
                 foreach (var prop in typeof(TMetadata).GetTypeInfo().DeclaredProperties
-                    .Where(prop => prop.GetMethod.IsPublic && !prop.GetMethod.IsStatic && prop.SetMethod.IsPublic && !prop.SetMethod.IsStatic))
+                    .Where(prop =>
+                        prop.GetMethod != null && prop.GetMethod.IsPublic && !prop.GetMethod.IsStatic &&
+                        prop.SetMethod != null && prop.SetMethod.IsPublic && !prop.SetMethod.IsStatic))
                 {
                     var dva = Expression.Constant(prop.GetCustomAttribute<DefaultValueAttribute>(false), typeof(DefaultValueAttribute));
                     var name = Expression.Constant(prop.Name, typeof(string));
@@ -117,7 +76,7 @@ namespace System.Composition.Hosting.Providers.Metadata
                     .Compile();
             }
 
-            throw ThrowHelper.CompositionException(string.Format(Resources.MetadataViewProvider_InvalidViewImplementation, typeof(TMetadata).Name));
+            throw new CompositionFailedException(string.Format(Properties.Resources.MetadataViewProvider_InvalidViewImplementation, typeof(TMetadata).Name));
         }
 
         static TValue GetMetadataValue<TValue>(IDictionary<string, object> metadata, string name, DefaultValueAttribute defaultValue)
@@ -128,9 +87,9 @@ namespace System.Composition.Hosting.Providers.Metadata
 
             if (defaultValue != null)
                 return (TValue)defaultValue.Value;
-            
+
             // This could be significantly improved by describing the target metadata property.
-            var message = string.Format(Resources.MetadataViewProvider_MissingMetadata, name);
+            var message = string.Format(Properties.Resources.MetadataViewProvider_MissingMetadata, name);
             throw ThrowHelper.CompositionException(message);
         }
     }

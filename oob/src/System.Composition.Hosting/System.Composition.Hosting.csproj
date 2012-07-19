@@ -75,8 +75,8 @@
     <Compile Include="Hosting\Providers\ImportMany\ImportManyExportDescriptorProvider.cs" />
     <Compile Include="Hosting\Providers\Lazy\LazyExportDescriptorProvider.cs" />
     <Compile Include="Hosting\Providers\Lazy\LazyWithMetadataExportDescriptorProvider.cs" />
-    <Compile Include="Hosting\Providers\Metadata\MetadataViewProviderExportDescriptorProvider.cs" />
     <Compile Include="Hosting\Util\Formatters.cs" />
+    <Compile Include="Hosting\Util\MetadataViewProvider.cs" />
     <Compile Include="Hosting\Util\MethodInfoExtensions.cs" />
     <Compile Include="Hosting\Util\SmallSparseInitonlyArray.cs" />
     <Compile Include="Microsoft\Internal\Assumes.cs" />

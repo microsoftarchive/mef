@@ -17,7 +17,7 @@ namespace System.Composition.Convention
         /// <summary>
         /// Import with contract <typeparamref name="T"/>.
         /// </summary>
-        /// <typeparam name="T">The imported contract type.</typeparam>
+        /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <returns>The imported instance.</returns>
         public T Import<T>()
         {
@@ -28,7 +28,7 @@ namespace System.Composition.Convention
         /// Import with contract <typeparamref name="T"/>.
         /// </summary>
         /// <param name="configure">Configuration for the import.</param>
-        /// <typeparam name="T">The imported contract type.</typeparam>
+        /// <typeparam name="T">The type of the parameter.</typeparam>
         /// <returns>The imported instance.</returns>
         public T Import<T>(Action<ImportConventionBuilder> configure) 
         {

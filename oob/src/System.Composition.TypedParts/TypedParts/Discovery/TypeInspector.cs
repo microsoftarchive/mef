@@ -153,7 +153,7 @@ namespace System.Composition.TypedParts.Discovery
             var attrType = attribute.GetType();
 
             // Note, we don't support ReflectionContext in this scenario as
-            if (attrType.GetTypeInfo().GetCustomAttribute<MetadataAttributeAttribute>(false) == null)
+            if (attrType.GetTypeInfo().GetCustomAttribute<MetadataAttributeAttribute>(true) == null)
                 return;
 
             foreach (var prop in attrType
@@ -172,7 +172,8 @@ namespace System.Composition.TypedParts.Discovery
             }
             else if (!contractType.IsAssignableFrom(property.PropertyType.GetTypeInfo()))
             {
-                var message = string.Format("Exported contract type '{0}' is not assignable from property '{1}' of part '{2}'.", contractType.Name, property.Name, partType.Name);
+                var message = string.Format(Properties.Resources.TypeInspector_ExportedContractTypeNotAssignable,
+                                                contractType.Name, property.Name, partType.Name);
                 throw new CompositionFailedException(message);
             }
         }
@@ -181,7 +182,7 @@ namespace System.Composition.TypedParts.Discovery
         {
             if (!contractType.IsGenericTypeDefinition)
             {
-                var message = string.Format("Open generic part '{0}' cannot export non-generic contract '{1}'.", partType.Name, contractType.Name);
+                var message = string.Format(Properties.Resources.TypeInspector_NoExportNonGenericContract, partType.Name, contractType.Name);
                 throw new CompositionFailedException(message);
             }
 
@@ -194,7 +195,7 @@ namespace System.Composition.TypedParts.Discovery
                     var mappedType = ifce;
                     if (!(mappedType == partType || mappedType.GenericTypeArguments.SequenceEqual(partType.GenericTypeParameters)))
                     {
-                        var message = string.Format("Exported contract '{0}' of open generic part '{1}' does not match the generic arguments of the class.", contractType.Name, partType.Name);
+                        var message = string.Format(Properties.Resources.TypeInspector_ArgumentMissmatch, contractType.Name, partType.Name);
                         throw new CompositionFailedException(message);
                     }
 
@@ -205,7 +206,7 @@ namespace System.Composition.TypedParts.Discovery
 
             if (!compatible)
             {
-                var message = string.Format("The open generic export '{0}' on part '{1}' is not compatible with the contract '{2}'.", exportingMemberType.Name, partType.Name, contractType.Name);
+                var message = string.Format(Properties.Resources.TypeInspector_ExportNotCompatible, exportingMemberType.Name, partType.Name, contractType.Name);
                 throw new CompositionFailedException(message);
             }
         }
@@ -231,7 +232,7 @@ namespace System.Composition.TypedParts.Discovery
             }
             else if (!contractType.IsAssignableFrom(partType))
             {
-                var message = string.Format("Exported contract type '{0}' is not assignable from part '{1}'.", contractType.Name, partType.Name);
+                var message = string.Format(Properties.Resources.TypeInspector_ContractNotAssignable, contractType.Name, partType.Name);
                 throw new CompositionFailedException(message);
             }
         }

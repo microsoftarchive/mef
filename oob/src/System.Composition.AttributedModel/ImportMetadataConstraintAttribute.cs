@@ -11,7 +11,7 @@ namespace System.Composition
     /// <summary>
     /// When applied on an import, requires certain metadata values on the exporter.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Property, Inherited=false)]
     public sealed class ImportMetadataConstraintAttribute : Attribute
     {
         readonly string _name;

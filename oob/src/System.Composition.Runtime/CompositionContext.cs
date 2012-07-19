@@ -151,7 +151,7 @@ namespace System.Composition
             object export;
             if (!TryGetExport(contract, out export))
                 throw new CompositionFailedException(
-                    string.Format("No export was found for the contract '{0}'.", contract));
+                    string.Format(Properties.Resources.CompositionContext_NoExportFoundForContract, contract));
 
             return export;
         }

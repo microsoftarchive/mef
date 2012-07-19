@@ -66,7 +66,7 @@ namespace System.Composition
                     else if (!importInfo.AllowDefault)
                     {
                         throw new CompositionFailedException(string.Format(
-                            "Missing dependency '{0}' on '{1}'.", pi.Name, objectWithLooseImports));
+                            Properties.Resources.CompositionContextExtensions_MissingDependency, pi.Name, objectWithLooseImports));
                     }
                 }
             }

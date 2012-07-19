@@ -37,7 +37,6 @@ namespace System.Composition.Lightweight.UnitTests
         [Export]
         public class HasNoName { }
 
-
         public class OptionallyNamed { [DefaultValue("B")] public string Name { get; set; } }
 
         [TestMethod]
@@ -88,34 +87,47 @@ namespace System.Composition.Lightweight.UnitTests
 
             var x = AssertX.Throws<CompositionFailedException>(() => cc.GetExport<Lazy<HasNoName, InvalidConcreteView>>());
 
-            Assert.AreEqual("The type 'InvalidConcreteView' cannot be used as a metadata view as it does not have a suitable (parameterless or dictionary) constructor.", x.Message);
+            Assert.AreEqual("The type 'InvalidConcreteView' cannot be used as a metadata view. A metadata view must be a concrete class with a parameterless or dictionary constructor.", x.Message);
         }
 
-        [Export]
-        public class HasUnsupportedMetadata { }
+        [Export, ExportMetadata("Name", "A")]
+        public class ExportsWithMetadata { }
 
-        public interface IUnsupportedMetadataView { }
+        public interface INamed { string Name { get; } }
 
         [Export]
-        public class ImportsUnsupportedMetadataView
+        public class ImportsWithMetadataInterface
         {
             [Import]
-            public Lazy<HasUnsupportedMetadata, IUnsupportedMetadataView> LazyImport { get; set; }
+            public Lazy<ExportsWithMetadata, INamed> Imported { get; set; }
         }
 
-        // Not aiming for perfect here - just needs to be indicative.
         [TestMethod]
-        public void UseOfOldStyleMetadataViewMessageIsDecipherable()
+        public void UnsupportedMetadataViewMessageIsInformative()
         {
-            var container = new ContainerConfiguration()
-                .WithParts(typeof(HasUnsupportedMetadata), typeof(ImportsUnsupportedMetadataView))
+            var cc = new ContainerConfiguration().WithParts(typeof(ImportsWithMetadataInterface), typeof(ExportsWithMetadata)).CreateContainer();
+            var x = AssertX.Throws<CompositionFailedException>(() => cc.GetExport<ImportsWithMetadataInterface>());
+            Assert.AreEqual("The type 'INamed' cannot be used as a metadata view. A metadata view must be a concrete class with a parameterless or dictionary constructor.", x.Message);
+        }
+
+        public class ReadonlyNameOrderMetadata
+        {
+            public int Order { get; set; }
+            public string Name { get { return "Name"; } }
+        }
+
+        [Export, ExportMetadata("Order", 1)]
+        public class HasOrder { }
+
+        [TestMethod]
+        public void ReadOnlyPropertiesOnMetadataViewsAreIgnored()
+        {
+            var c = new ContainerConfiguration()
+                .WithPart<HasOrder>()
                 .CreateContainer();
 
-            var x = AssertX.Throws<CompositionFailedException>(() => container.GetExport<ImportsUnsupportedMetadataView>());
-            Assert.AreEqual("No export was found for the contract 'Func<IDictionary<String, Object>, IUnsupportedMetadataView> \"MetadataViewProvider\"'" + Environment.NewLine +
-                " -> required by import 'metadata' of part 'Lazy<HasUnsupportedMetadata, IUnsupportedMetadataView>'" + Environment.NewLine +
-                " -> required by import 'LazyImport' of part 'ImportsUnsupportedMetadataView'" + Environment.NewLine +
-                " -> required by initial request for contract 'ImportsUnsupportedMetadataView'", x.Message);
+            var l = c.GetExport<Lazy<HasOrder, ReadonlyNameOrderMetadata>>();
+            Assert.AreEqual(1, l.Metadata.Order);
         }
     }
 }

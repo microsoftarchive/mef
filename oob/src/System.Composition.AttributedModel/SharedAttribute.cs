@@ -17,7 +17,7 @@ namespace System.Composition
     /// public class HttpResponseWriter { }
     /// </example>
     /// <seealso cref="SharingBoundaryAttribute"/>
-    [AttributeUsage(AttributeTargets.Class)]
+    [AttributeUsage(AttributeTargets.Class, Inherited=false)]
     public class SharedAttribute : PartMetadataAttribute
     {
         const string SharingBoundaryPartMetadataName = "SharingBoundary";

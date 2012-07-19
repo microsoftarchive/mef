@@ -36,7 +36,6 @@ namespace System.Composition.Convention
 
             Assert.IsNotNull(pAttr);                   // Ensure P1 has ImportAttribute (default configured)
             Assert.IsNull(pAttr.ContractName);
-            Assert.IsNull(pAttr.ContractType);
         }
 
         [TestMethod]
@@ -49,7 +48,6 @@ namespace System.Composition.Convention
 
             Assert.IsNotNull(pAttr);                   // Ensure P3 has ImportManyAttribute (default configured)
             Assert.IsNull(pAttr.ContractName);
-            Assert.IsNull(pAttr.ContractType);
         }
 
 
@@ -63,7 +61,6 @@ namespace System.Composition.Convention
 
             Assert.IsNotNull(pAttr);                   // Ensure P1 has ImportAttribute (default configured)
             Assert.IsNull(pAttr.ContractName);
-            Assert.IsNull(pAttr.ContractType);
         }
 
 

@@ -67,7 +67,7 @@ namespace System.Composition.Hosting
             if (conventions == null) throw new ArgumentNullException("conventions");
 
             if (_defaultAttributeContext != null)
-                throw new InvalidOperationException("The default conventions for the container configuration have already been set.");
+                throw new InvalidOperationException(System.Composition.Properties.Resources.ContainerConfiguration_DefaultConventionSet);
 
             _defaultAttributeContext = conventions;
             return this;

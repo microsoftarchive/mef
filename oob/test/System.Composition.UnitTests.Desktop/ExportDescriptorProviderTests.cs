@@ -31,7 +31,7 @@ namespace System.Composition.Lightweight.UnitTests
                 if (implementations.Any())
                     return NoExportDescriptors;
 
-                return new[] { new ExportDescriptorPromise(contract, "test provider", false, NoDependencies, _ => ExportDescriptor.Create((c, o) => DefaultObject, NoMetadata)) };
+                return new[] { new ExportDescriptorPromise(contract, "test metadataProvider", false, NoDependencies, _ => ExportDescriptor.Create((c, o) => DefaultObject, NoMetadata)) };
             }
         }
 

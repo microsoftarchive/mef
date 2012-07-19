@@ -45,30 +45,25 @@ namespace System.Composition.Hosting.Providers.ExportFactory
                 boundaries = (specifiedBoundaries ?? new string[0]).ToArray();
             }
 
-            var providerDependency = definitionAccessor.ResolveRequiredDependency(
-                "metadata",
-                new CompositionContract(typeof(Func<IDictionary<string, object>, TMetadata>), MetadataViewProviderExportDescriptorProvider.MetadataViewProviderContractName),
-                true);
+            var metadataProvider = MetadataViewProvider.GetMetadataViewProvider<TMetadata>();
 
             return definitionAccessor.ResolveDependencies("product", productContract, false)
                 .Select(d => new ExportDescriptorPromise(
                     exportFactoryContract,
                     typeof(ExportFactory<TProduct, TMetadata>).Name,
                     false,
-                    () => new[] { d, providerDependency },
+                    () => new[] { d },
                     _ =>
                     {
                         var dsc = d.Target.GetDescriptor();
-                        var provider = providerDependency.Target.GetDescriptor().Activator;
                         return ExportDescriptor.Create((c, o) =>
                         {
-                            var providerVal = (Func<IDictionary<string, object>, TMetadata>)provider(c, o);
                             return new ExportFactory<TProduct, TMetadata>(() =>
                             {
                                 var lifetimeContext = new LifetimeContext(c, boundaries);
                                 return Tuple.Create<TProduct, Action>((TProduct)CompositionOperation.Run(lifetimeContext, dsc.Activator), lifetimeContext.Dispose);
                             },
-                            providerVal(dsc.Metadata));
+                            metadataProvider(dsc.Metadata));
                         },
                         dsc.Metadata);
                     }))

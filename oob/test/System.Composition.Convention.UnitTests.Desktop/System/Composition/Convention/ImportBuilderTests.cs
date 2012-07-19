@@ -24,30 +24,6 @@ namespace System.ComponentModel.Composition
         }
 
         [TestMethod]
-        public void AsContractTypeOfT_SetsContractType()
-        {
-            var builder = new ConventionBuilder();
-            builder.ForType<FooImpl>().ImportProperty( (p) => p.IFooProperty, (c) => c.AsContractType<IFoo>() );
-           
-            ImportAttribute importAtt = GetImportAttribute(builder);
-            Assert.AreEqual(typeof(IFoo), importAtt.ContractType);
-            Assert.IsNull(importAtt.ContractName);
-            Assert.IsFalse(importAtt.AllowDefault);
-        }
-        
-        [TestMethod]
-        public void AsContractType_SetsContractType()
-        {
-            var builder = new ConventionBuilder();
-            builder.ForType<FooImpl>().ImportProperty( (p) => p.IFooProperty, (c) => c.AsContractType(typeof(IFoo)) );
-
-            ImportAttribute importAtt = GetImportAttribute(builder);
-            Assert.AreEqual(typeof(IFoo), importAtt.ContractType);
-            Assert.IsNull(importAtt.ContractName);
-            Assert.IsFalse(importAtt.AllowDefault);
-        }
-
-        [TestMethod]
         public void AsContractName_SetsContractName()
         {
             var builder = new ConventionBuilder();
@@ -56,18 +32,16 @@ namespace System.ComponentModel.Composition
             ImportAttribute importAtt = GetImportAttribute(builder);
             Assert.AreEqual("hey", importAtt.ContractName);
             Assert.IsFalse(importAtt.AllowDefault);
-            Assert.IsNull(importAtt.ContractType);
         }
 
         [TestMethod]
         public void AsContractName_AndContractType_ComputeContractNameFromType()
         {
             var builder = new ConventionBuilder();
-            builder.ForType<FooImpl>().ImportProperty((p) => p.IFooProperty, c => c.AsContractName(t => "Contract:" + t.FullName).AsContractType<IFoo>());
+            builder.ForType<FooImpl>().ImportProperty((p) => p.IFooProperty, c => c.AsContractName(t => "Contract:" + t.FullName));
 
             ImportAttribute importAtt = GetImportAttribute(builder);
             Assert.AreEqual("Contract:" + typeof(IFoo).FullName, importAtt.ContractName);
-            Assert.AreEqual(typeof(IFoo), importAtt.ContractType);
         }
        
         [TestMethod]
@@ -78,7 +52,6 @@ namespace System.ComponentModel.Composition
 
             ImportAttribute importAtt = GetImportAttribute(builder);
             Assert.IsTrue(importAtt.AllowDefault);
-            Assert.IsNull(importAtt.ContractType);
             Assert.IsNull(importAtt.ContractName);
             }
 
@@ -86,11 +59,10 @@ namespace System.ComponentModel.Composition
         public void AsContractName_AndContractType_SetsContractNameAndType()
         {
             var builder = new ConventionBuilder();
-            builder.ForType<FooImpl>().ImportProperty((p) => p.IFooProperty, (c) => c.AsContractName("hey").AsContractType(typeof(IFoo)) );
+            builder.ForType<FooImpl>().ImportProperty((p) => p.IFooProperty, (c) => c.AsContractName("hey") );
 
             ImportAttribute importAtt = GetImportAttribute(builder);
             Assert.AreEqual("hey", importAtt.ContractName);
-            Assert.AreEqual(typeof(IFoo), importAtt.ContractType);
         }
 
         [TestMethod]
@@ -102,7 +74,6 @@ namespace System.ComponentModel.Composition
             ImportManyAttribute importAtt = GetImportManyAttribute(builder);
             Assert.IsNotNull(importAtt);
             Assert.IsNull(importAtt.ContractName);
-            Assert.IsNull(importAtt.ContractType);
         }
 
         [TestMethod]
@@ -114,7 +85,6 @@ namespace System.ComponentModel.Composition
             ImportManyAttribute importAtt = GetImportManyAttribute(builder);
             Assert.IsNotNull(importAtt);
             Assert.AreEqual("hey", importAtt.ContractName);
-            Assert.IsNull(importAtt.ContractType);
         }
 
         [TestMethod]

@@ -37,7 +37,6 @@ namespace System.Composition.Convention
 
 			Assert.IsNotNull(importAttribute);
 			Assert.IsNull(importAttribute.ContractName);
-			Assert.IsNull(importAttribute.ContractType);
 		}
 
 		[TestMethod]
@@ -49,7 +48,6 @@ namespace System.Composition.Convention
             var importManyAttribute = GetAttributeFromMember(builder, typeof(DerClass), "P3") as ImportManyAttribute;
             Assert.IsNotNull(importManyAttribute);
 			Assert.IsNull(importManyAttribute.ContractName);
-			Assert.IsNull(importManyAttribute.ContractType);
 		}
 
 		[TestMethod]
@@ -62,7 +60,6 @@ namespace System.Composition.Convention
 
 			Assert.IsNotNull(importAttribute);
 			Assert.IsNull(importAttribute.ContractName);
-			Assert.IsNull(importAttribute.ContractType);
 		}
 
 		[TestMethod]

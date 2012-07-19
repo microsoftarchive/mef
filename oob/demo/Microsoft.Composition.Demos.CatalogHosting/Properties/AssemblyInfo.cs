@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
-using System.Resources;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Security;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Microsoft.Composition.Demos.ComponentModelAttributeSupport")]
+[assembly: AssemblyTitle("Microsoft.Composition.Demos.CatalogHosting")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("Microsoft.Composition.Demos.ComponentModelAttributeSupport")]
+[assembly: AssemblyProduct("Microsoft.Composition.Demos.CatalogHosting")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -17,9 +16,3 @@ using System.Security;
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("90d5c81c-78cb-46ca-ae46-9bd63505cd38")]
-
-[assembly: SecurityTransparent]
-[assembly: NeutralResourcesLanguage("en")]

@@ -110,7 +110,8 @@ namespace System.Composition.Hosting.Core
 
             if (_metadataConstraints != null)
                 result += string.Format(" {{ {0} }}",
-                    string.Join(", ", _metadataConstraints.Select(kv => string.Format("{0} = {1}", kv.Key, Formatters.Format(kv.Value)))));
+                    string.Join(Properties.Resources.Formatter_ListSeparatorWithSpace,
+                        _metadataConstraints.Select(kv => string.Format("{0} = {1}", kv.Key, Formatters.Format(kv.Value)))));
 
             return result;
         }

@@ -5,10 +5,10 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Microsoft.Composition.Demos.ComponentModelAttributeSupport.UnitTests")]
+[assembly: AssemblyTitle("Microsoft.Composition.Demos.CatalogHosting.UnitTests.Desktop")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("Microsoft.Composition.Demos.ComponentModelAttributeSupport.UnitTests")]
+[assembly: AssemblyProduct("Microsoft.Composition.Demos.CatalogHosting.UnitTests.Desktop")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -16,6 +16,3 @@ using System.Runtime.InteropServices;
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
-
-// The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("c91fa084-4410-467b-aca2-694b57c5795b")]

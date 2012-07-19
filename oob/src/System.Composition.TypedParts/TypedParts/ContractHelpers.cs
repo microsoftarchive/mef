@@ -40,7 +40,7 @@ namespace System.Composition.TypedParts
                 var ia = attr as ImportAttribute;
                 if (ia != null)
                 {
-                    importedContract = new CompositionContract(ia.ContractType ?? memberType, ia.ContractName);
+                    importedContract = new CompositionContract(memberType, ia.ContractName);
                     allowDefault = ia.AllowDefault;
                     explicitImportsApplied++;
                 }
@@ -51,7 +51,7 @@ namespace System.Composition.TypedParts
                     {
                         importMetadata = importMetadata ?? new Dictionary<string, object>();
                         importMetadata.Add(ImportManyImportMetadataConstraintName, true);
-                        importedContract = new CompositionContract(ima.ContractType ?? memberType, ima.ContractName);
+                        importedContract = new CompositionContract( memberType, ima.ContractName);
                         explicitImportsApplied++;
                     }
                     else
@@ -67,7 +67,7 @@ namespace System.Composition.TypedParts
 
                 var attrType = attr.GetType();
                 // Note, we don't support ReflectionContext in this scenario
-                if (attrType.GetTypeInfo().GetCustomAttribute<MetadataAttributeAttribute>(false) != null)
+                if (attrType.GetTypeInfo().GetCustomAttribute<MetadataAttributeAttribute>(true) != null)
                 {
                     // We don't coalesce to collections here the way export metadata does
                     foreach (var prop in attrType
@@ -82,7 +82,7 @@ namespace System.Composition.TypedParts
 
             if (explicitImportsApplied > 1)
             {
-                var message = string.Format("Multiple imports have been configured for '{0}'. At most one import can be applied to a single site.", site);
+                var message = string.Format(Properties.Resources.ContractHelpers_TooManyImports, site);
                 throw new CompositionFailedException(message);
             }
 

@@ -17,7 +17,7 @@ namespace System.Composition
     /// public ExportFactory&lt;HttpRequestHandler&gt; HandlerFactory { get; set; }
     /// </example>
     /// <seealso cref="SharedAttribute" />
-    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
+    [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property, Inherited=false)]
     [MetadataAttribute]
     public sealed class SharingBoundaryAttribute : Attribute
     {

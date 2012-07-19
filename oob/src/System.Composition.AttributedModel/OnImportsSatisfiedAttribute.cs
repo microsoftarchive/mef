@@ -11,7 +11,7 @@ namespace System.Composition
     /// MEF will call that method when composition of the part has
     /// completed. The method must be public or internal.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Method, Inherited=false)]
     public sealed class OnImportsSatisfiedAttribute : Attribute
     {
     }

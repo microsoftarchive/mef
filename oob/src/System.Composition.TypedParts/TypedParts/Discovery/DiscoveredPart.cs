@@ -92,8 +92,7 @@ namespace System.Composition.TypedParts.Discovery
                     {
                         if (_constructor != null)
                         {
-                            //Todo: Localise me
-                            var message = string.Format("Multiple importing constructors were found on type '{0}'.", _partType);
+                            var message = string.Format(Properties.Resources.DiscoveredPart_MultipleImportingConstructorsFound, _partType);
                             throw new CompositionFailedException(message);
                         }
 
@@ -107,8 +106,7 @@ namespace System.Composition.TypedParts.Discovery
 
                 if (_constructor == null)
                 {
-                    //Todo: Localise me
-                    var message = string.Format("No importing constructor was found on type '{0}'.", _partType);
+                    var message = string.Format(Properties.Resources.DiscoveredPart_NoImportingConstructorsFound, _partType);
                     throw new CompositionFailedException(message);
                 }
             }

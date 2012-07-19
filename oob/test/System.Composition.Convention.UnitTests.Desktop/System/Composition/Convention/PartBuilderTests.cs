@@ -310,7 +310,6 @@ namespace System.Composition.Convention
 
             var importAttribute = attributes.First((t) => t.GetType() == typeof(ImportAttribute)) as ImportAttribute;
             Assert.IsNull(importAttribute.ContractName);
-            Assert.IsNull(importAttribute.ContractType);
 
             attributes = GetAttributesFromMember(builder, typeof(FooImpl), "P2");
             Assert.AreEqual(0, attributes.Count());
@@ -339,7 +338,6 @@ namespace System.Composition.Convention
 
             var importAttribute = attributes.First((t) => t.GetType() == typeof(ImportManyAttribute)) as ImportManyAttribute;
             Assert.IsNull(importAttribute.ContractName);
-            Assert.IsNull(importAttribute.ContractType);
         }
 
         [TestMethod]

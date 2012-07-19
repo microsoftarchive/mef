@@ -17,7 +17,6 @@ namespace System.Composition.Convention
         static readonly Type[] SupportedImportManyTypes = new[] { typeof(IList<>), typeof(ICollection<>), typeof(IEnumerable<>) };
 
         private string _contractName;
-        private Type _contractType;
         private bool? _asMany;
         private bool _allowDefault;
         private Func<Type, string> _getContractNameFromPartType;
@@ -25,28 +24,6 @@ namespace System.Composition.Convention
         private List<Tuple<string, Func<Type, object>>> _metadataConstraintItemFuncs;
 
         internal ImportConventionBuilder() {}
-
-        /// <summary>
-        /// Specifies the contract type for the import.
-        /// </summary>
-        /// <typeparam name="T">The contract type.</typeparam>
-        /// <returns>An import builder allowing further configuration.</returns>
-        public ImportConventionBuilder AsContractType<T>()
-        {
-            return AsContractType(typeof(T));
-        }
-
-        /// <summary>
-        /// Specify the contract type for the import.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns>An import builder allowing further configuration.</returns>
-        public ImportConventionBuilder AsContractType(Type type)
-        {
-            Requires.NotNull(type, "type");
-            this._contractType = type;
-            return this;
-        }
 
         /// <summary>
         /// Specify the contract name for the import.
@@ -149,14 +126,14 @@ namespace System.Composition.Convention
             var asMany = _asMany ?? IsSupportedImportManyType(type.GetTypeInfo());
             if(!asMany)
             {
-                importAttribute = new ImportAttribute(contractName, this._contractType) 
+                importAttribute = new ImportAttribute(contractName) 
                 {
                     AllowDefault = this._allowDefault
                 };
             }
             else
             {
-                importAttribute = new ImportManyAttribute(contractName, this._contractType);
+                importAttribute = new ImportManyAttribute(contractName);
             }
             if(attributes == null)
             {

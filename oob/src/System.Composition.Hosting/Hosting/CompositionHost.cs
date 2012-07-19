@@ -56,8 +56,7 @@ namespace System.Composition.Hosting
                 new ImportManyExportDescriptorProvider(),
                 new LazyWithMetadataExportDescriptorProvider(),
                 new CurrentScopeExportDescriptorProvider(),
-                new ExportFactoryWithMetadataExportDescriptorProvider(),
-                new MetadataViewProviderExportDescriptorProvider()
+                new ExportFactoryWithMetadataExportDescriptorProvider()
             }
             .Concat(providers)
             .ToArray();

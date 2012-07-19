@@ -138,5 +138,56 @@ namespace System.Composition.UnitTests
             var s = container.GetExports<string>();
             Assert.AreEqual(2, s.Count());
         }
+
+        [Export]
+        public class BaseWithDeclaredExports
+        {
+            public BaseWithDeclaredExports() { Property = "foo"; }
+
+            [Export]
+            public string Property { get; set; }
+        }
+
+        public class DerivedFromBaseWithDeclaredExports : BaseWithDeclaredExports { }
+
+        [TestMethod]
+        public void InThePresenceOfConventionsClassExportsAreNotInherited()
+        {
+            var cc = new ContainerConfiguration()
+                .WithPart<DerivedFromBaseWithDeclaredExports>(new ConventionBuilder())
+                .CreateContainer();
+
+            BaseWithDeclaredExports export;
+            Assert.IsFalse(cc.TryGetExport(out export));
+        }
+
+        [TestMethod]
+        public void InThePresenceOfConventionsPropertyExportsAreNotInherited()
+        {
+            var cc = new ContainerConfiguration()
+                .WithPart<DerivedFromBaseWithDeclaredExports>(new ConventionBuilder())
+                .CreateContainer();
+
+            string export;
+            Assert.IsFalse(cc.TryGetExport(out export));
+        }
+
+        public class CustomExport : ExportAttribute { }
+
+        [CustomExport]
+        public class BaseWithCustomExport { }
+
+        public class DerivedFromBaseWithCustomExport : BaseWithCustomExport { }
+
+        [TestMethod]
+        public void CustomAttributesDoNotBecomeInheritedInThePresenceOfConventions()
+        {
+            var cc = new ContainerConfiguration()
+                .WithPart<DerivedFromBaseWithCustomExport>(new ConventionBuilder())
+                .CreateContainer();
+
+            BaseWithCustomExport bce;
+            Assert.IsFalse(cc.TryGetExport(out bce));
+        }
     }
 }

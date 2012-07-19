@@ -37,7 +37,8 @@ namespace System.Composition.TypedParts.ActivationFeatures
             var result = activator;
 
             var partTypeAsType = partType.AsType();
-            var importsSatisfiedMethods = partTypeAsType.GetRuntimeMethods().Where( mi => _attributeContext.GetDeclaredAttribute<OnImportsSatisfiedAttribute>(partTypeAsType, mi) != null );
+            var importsSatisfiedMethods = partTypeAsType.GetRuntimeMethods()
+                .Where(mi => _attributeContext.GetDeclaredAttribute<OnImportsSatisfiedAttribute>(mi.DeclaringType, mi) != null);
 
             foreach (var m in importsSatisfiedMethods)
             {
@@ -45,7 +46,7 @@ namespace System.Composition.TypedParts.ActivationFeatures
                     m.IsGenericMethodDefinition || m.GetParameters().Length != 0)
                 {
                     var message = string.Format(
-                        "The method {0}.{1} has the OnImportsSatisfied attribute applied, but is not a public or internal parameterless instance method returning void.",
+                        Properties.Resources.OnImportsSatisfiedFeature_AttributeError,
                         partType, m.Name);
                     throw new CompositionFailedException(message);                        
                 }

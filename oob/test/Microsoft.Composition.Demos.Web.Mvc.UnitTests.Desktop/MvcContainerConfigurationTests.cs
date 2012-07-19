@@ -58,10 +58,5 @@ namespace Microsoft.Composition.Demos.Web.Mvc.UnitTests
 
             Assert.AreNotSame(r1sp1, r1sp2);
         }
-
-        [TestMethod, Ignore]
-        public void ModelBindersAreExportedUnderSpecificContract()
-        {
-        }
     }
 }

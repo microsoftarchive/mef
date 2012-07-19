@@ -114,16 +114,6 @@ namespace System.Composition.UnitTests
             Assert.AreEqual(2, others.Count());
         }
 
-        [TestMethod, Ignore]
-        public void TypesNotMatchingGenericParameterConstraintsAreIgnored()
-        {
-        }
-
-        [TestMethod, Ignore]
-        public void TypesThatReorderInterfaceParametersAreCorrectlyInstantiated()
-        {
-        }
-
         [TestMethod]
         public void MultipleGenericExportsCanBeSpecifiedAtTheClassLevel()
         {

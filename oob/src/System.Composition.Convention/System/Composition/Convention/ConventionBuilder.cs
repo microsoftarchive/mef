@@ -152,8 +152,6 @@ namespace System.Composition.Convention
         {
             Requires.NotNull(member, "member");
 
-            var attributes = member.GetCustomAttributes<Attribute>();
-
             // Now edit the attributes returned from the base type
             List<Attribute> cachedAttributes = null;
             var typeInfo = member as TypeInfo;
@@ -215,7 +213,14 @@ namespace System.Composition.Convention
             {
                 cachedAttributes = ReadMemberCustomAttributes(reflectedType, member);
             }
-            return cachedAttributes == null ? attributes : attributes.Concat(cachedAttributes);
+
+            IEnumerable<Attribute> appliedAttributes;
+            if (!(member is TypeInfo) && member.DeclaringType != reflectedType)
+                appliedAttributes = Enumerable.Empty<Attribute>();
+            else
+                appliedAttributes = member.GetCustomAttributes<Attribute>(false);
+
+            return cachedAttributes == null ? appliedAttributes : appliedAttributes.Concat(cachedAttributes);
         }
 
         private List<Attribute> ReadMemberCustomAttributes(Type reflectedType, System.Reflection.MemberInfo member)

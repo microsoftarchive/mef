@@ -35,7 +35,7 @@ namespace System.Composition.Convention
 
         //Property Import/Export selection and configuration
         private List<Tuple<Predicate<PropertyInfo>, Action<PropertyInfo, ExportConventionBuilder>, Type>> _propertyExports;
-        private List<Tuple<Predicate<PropertyInfo>, Action<PropertyInfo, ImportConventionBuilder>, Type>> _propertyImports;
+        private List<Tuple<Predicate<PropertyInfo>, Action<PropertyInfo, ImportConventionBuilder>>> _propertyImports;
         private List<Tuple<Predicate<Type>, Action<Type, ExportConventionBuilder>>> _interfaceExports;
         private List<Predicate<MethodInfo>> _methodImportsSatisfiedNotifications;
 
@@ -47,7 +47,7 @@ namespace System.Composition.Convention
             this._typeExportBuilders = new List<ExportConventionBuilder>();
             this._constructorImportBuilders = new List<ImportConventionBuilder>();
             this._propertyExports = new List<Tuple<Predicate<PropertyInfo>, Action<PropertyInfo, ExportConventionBuilder>, Type>>();
-            this._propertyImports = new List<Tuple<Predicate<PropertyInfo>, Action<PropertyInfo, ImportConventionBuilder>, Type>>();
+            this._propertyImports = new List<Tuple<Predicate<PropertyInfo>, Action<PropertyInfo, ImportConventionBuilder>>>();
             this._interfaceExports = new List<Tuple<Predicate<Type>, Action<Type, ExportConventionBuilder>>>();
             this._methodImportsSatisfiedNotifications = new List<Predicate<MethodInfo>>();
         }
@@ -278,14 +278,14 @@ namespace System.Composition.Convention
             Predicate<PropertyInfo> propertyFilter,
             Action<PropertyInfo, ImportConventionBuilder> importConfiguration)
         {
-            this._propertyImports.Add(Tuple.Create(propertyFilter, importConfiguration, default(Type)));
+            this._propertyImports.Add(Tuple.Create(propertyFilter, importConfiguration));
             return this;
         }
 
         /// <summary>
         /// Select properties to import into the part.
         /// </summary>
-        /// <typeparam name="T">Contract type to import.</typeparam>
+        /// <typeparam name="T">Property type to import.</typeparam>
         /// <param name="propertyFilter">Filter to select matching properties.</param>
         /// <returns>A part builder allowing further configuration of the part.</returns>
         public PartConventionBuilder ImportProperties<T>(Predicate<PropertyInfo> propertyFilter)
@@ -298,7 +298,7 @@ namespace System.Composition.Convention
         /// <summary>
         /// Select properties to import into the part.
         /// </summary>
-        /// <typeparam name="T">Contract type to import.</typeparam>
+        /// <typeparam name="T">Property type to import.</typeparam>
         /// <param name="propertyFilter">Filter to select matching properties.</param>
         /// <param name="importConfiguration">Action to configure selected properties.</param>
         /// <returns>A part builder allowing further configuration of the part.</returns>
@@ -316,7 +316,8 @@ namespace System.Composition.Convention
             Predicate<PropertyInfo> propertyFilter,
             Action<PropertyInfo, ImportConventionBuilder> importConfiguration)
         {
-            this._propertyImports.Add(Tuple.Create(propertyFilter, importConfiguration, typeof(T)));
+            Predicate<PropertyInfo> typedFilter = pi => pi.PropertyType.Equals(typeof(T)) && (propertyFilter == null || propertyFilter(pi));
+            this._propertyImports.Add(Tuple.Create(typedFilter, importConfiguration));
             return this;
         }
 
@@ -689,11 +690,6 @@ namespace System.Composition.Convention
                         if (importSpecification.Item1 != null && importSpecification.Item1(underlyingPi))
                         {
                             var importBuilder = new ImportConventionBuilder();
-    
-                            if (importSpecification.Item3 != null)
-                            {
-                                importBuilder.AsContractType(importSpecification.Item3);
-                            }
 
                             if(importSpecification.Item2 != null)
                             {
