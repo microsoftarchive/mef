@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Composition.Initialization</name>
+    </assembly>
+    <members>
+        <member name="M:System.ComponentModel.Composition.Hosting.CompositionHost.InitializeContainer(System.ComponentModel.Composition.Hosting.CompositionContainer)">
+            <summary>
+                This method can be used to initialize the global container used by <see cref="!:PartInitializer.SatisfyImports"/>
+                in case where the default container doesn't provide enough flexibility. 
+                
+                If this method is needed it should be called exactly once and as early as possible in the application host. It will need
+                to be called before the first call to <see cref="!:PartInitializer.SatisfyImports"/>
+            </summary>
+            <param name="container">
+                <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer"/> that should be used instead of the default global container.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="container"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+                Either <see cref="M:System.ComponentModel.Composition.Hosting.CompositionHost.InitializeContainer(System.ComponentModel.Composition.Hosting.CompositionContainer)"/> has already been called or someone has already made use of the global 
+                container via <see cref="!:PartInitializer.SatisfyImports"/>. In either case you need to ensure that it 
+                is called only once and that it is called early in the application host startup code.
+            </exception>
+        </member>
+        <member name="M:System.ComponentModel.Composition.CompositionInitializer.SatisfyImports(System.Object)">
+            <summary>
+                Will satisfy the imports on a object instance based on a <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer"/>
+                registered with the <see cref="T:System.ComponentModel.Composition.Hosting.CompositionHost"/>. By default if no <see cref="T:System.ComponentModel.Composition.Hosting.CompositionContainer"/>
+                is registered the first time this is called it will be initialized to a catalog
+                that contains all the assemblies loaded by the initial application XAP.
+            </summary>
+            <param name="instance">
+                Object instance that contains <see cref="T:System.ComponentModel.Composition.ImportAttribute"/>s that need to be satisfied.
+            </param>
+            <exception cref="T:System.ArgumentNullException">
+                <paramref name="instance"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="instance"/> contains <see cref="T:System.ComponentModel.Composition.ExportAttribute"/>s applied on its type.
+            </exception>
+            <exception cref="T:System.ComponentModel.Composition.ChangeRejectedException">
+                One or more of the imports on the object instance could not be satisfied.
+            </exception>
+            <exception cref="T:System.ComponentModel.Composition.CompositionException">
+                One or more of the imports on the object instance caused an error while composing.
+            </exception>
+        </member>
+        <member name="T:System.ComponentModel.Composition.Strings">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.ArgumentException_TypeHasExports">
+            <summary>
+              Looks up a localized string similar to Cannot call SatisfyImports on a object of type &apos;{0}&apos; because it is marked with one or more ExportAttributes..
+            </summary>
+        </member>
+        <member name="P:System.ComponentModel.Composition.Strings.InvalidOperationException_GlobalContainerAlreadyInitialized">
+            <summary>
+              Looks up a localized string similar to The container has already been initialized either by another call to InitializeContainer or by someone causing the default container to be constructed. Ensure that InitializeContainer is one of the first things that happens in the application host to ensure that it is ready for the first composition..
+            </summary>
+        </member>
+    </members>
+</doc>
