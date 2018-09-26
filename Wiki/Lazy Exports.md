@@ -1,7 +1,7 @@
 # Lazy Exports
 During composition of a part, an import will trigger the instantiation of a part (or parts) that expose the necessary exports required for the original requested part. For some applications delaying this instantiation – and preventing the recursive composition down the graph – may be an important factor to consider as creation a long and complex graph of objects can be expensive and unnecessary. 
 
-This is the motivation for MEF to support what we call lazy exports. In order to use it all you need to do is to import an **{{[System.Lazy<T>](System.Lazy_T_)}}** instead of **{{[T](T)}}** directly. For example, consider the code snippet bellow:
+This is the motivation for MEF to support what we call lazy exports. In order to use it all you need to do is to import **{{[System.Lazy<T>](System.Lazy_T_)}}** instead of **{{[T](T)}}** directly. For example, consider the code snippet bellow:
 
 {code:c#}
 public class HttpServerHealthMonitor
