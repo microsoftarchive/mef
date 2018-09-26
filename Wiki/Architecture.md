@@ -1,8 +1,8 @@
 # Architecture Overview 
 
-MEF’s design can be divided into three distinct layers. The container layer, which is most of the public API is available to the user; the primitives, which provides a layer of indirection so MEF won’t be tight coupled with a single approach to part discovery, imports/exports definitions and so forth; and finally our default implementation of the primitive layer that we call Attributed Programming Model, which relies on types and attributes for discovery and definition of imports/exports. 
+MEF’s design can be divided into three distinct layers. The container layer, which is most of the public API is available to the user; the primitives, which provides a layer of indirection so MEF won’t be tightly coupled with a single approach to part discovery, imports/exports definitions and so forth; and finally our default implementation of the primitive layer that we call Attributed Programming Model, which relies on types and attributes for discovery and definition of imports/exports. 
 
-The container layer has no dependency on the attributed programming model, instead it solely work with the abstractions provided in the primitives layer. That makes possible to develop a completely different programming model, and have it working together with our default programming model, for example. 
+The container layer has no dependency on the attributed programming model, instead it solely works with the abstractions provided in the primitives layer. That makes possible to develop a completely different programming model, and have it working together with our default programming model, for example. 
 
 ![](Architecture_arch1.png)
 
