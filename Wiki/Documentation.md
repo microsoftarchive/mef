@@ -4,7 +4,7 @@ Documentation for MEF in web and .NET for Windows Store apps on this site:
 
 * [What is Microsoft.Composition?](What%20is%20Microsoft.Composition_.md)
 * [Sharing and lifetime](Sharing-and-lifetime) in Microsoft.Composition
-* Extending Microsoft.Composition [with alternative programming models](ProgrammingModelExtensions)
+* Extending Microsoft.Composition [with alternative programming models](ProgrammingModelExtensions.md)
 * [Avoiding reference (memory) leaks in Microsoft.Composition](--Avoiding-reference-(memory)-leaks-in-MEF-for-.Net-4.5-and-Windows-Store-Apps)
 * [Unit Testing Microsoft.Composition](Unit-Testing-Microsoft.Composition)
 * Creating a [Standalone Web API dependency resolver using Microsoft.Composition](Standalone%20Web%20API%20dependency%20resolver%20using%20Microsoft.Composition.md)
